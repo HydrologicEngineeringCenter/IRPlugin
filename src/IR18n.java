@@ -3,7 +3,7 @@ import com.rma.util.I18n;
 import java.util.ResourceBundle;
 
 public class IR18n extends I18n {
-    public static final String BUNDLE_NAME = "ComputableProperties";
+    public static final String BUNDLE_NAME = "IRProperties";
     private static final ResourceBundle SAMPLE_RESOURCE_BUNDLE;
     private ResourceBundle _resourceBundle;
     static

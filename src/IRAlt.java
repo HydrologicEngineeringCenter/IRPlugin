@@ -21,6 +21,9 @@ public class IRAlt extends SelfContainedPluginAlt {
     private static final String DocumentRoot = "IRAlt";
     private static final String AlternativeNameAttribute = "Name";
     private static final String AlternativeDescriptionAttribute = "Desc";
+    private static final String EvalLocationElement = "EvaluationLocations";
+    private List<EvaluationLocation> _evalLocs;
+
     private ComputeOptions _computeOptions;
 
     public IRAlt() {
@@ -42,8 +45,26 @@ public class IRAlt extends SelfContainedPluginAlt {
             if (_dataLocations != null) {
                 saveDataLocations(root, _dataLocations);
             }
+            Element evaluationLocations = new Element(EvalLocationElement);
+            if (_evalLocs!= null){
+                for (DataLocation dl : _dataLocations){
+                    Element locationElement = new Element("Location");
+                    locationElement.setAttribute("Name", dl.getName());
+                    locationElement.setAttribute("Parameter", dl.getParameter());
+                    for(EvaluationLocation el : _evalLocs){
+                        //add to the element.
+                        if(el.get_location().getName().equals(dl.getName())){
+                            if(el.get_location().getParameter().equals(dl.getParameter())){
+                                locationElement.addContent(el.writeToXML());
+                            }
+                        }
+                    }
+                    evaluationLocations.addContent(locationElement);
+                }
+            }
+            root.addContent(evaluationLocations);
             Document doc = new Document(root);
-            return writeXMLFile(doc, file);
+            return writeXMLFile(doc,file);
         }
         return false;
     }
@@ -70,13 +91,37 @@ public class IRAlt extends SelfContainedPluginAlt {
             _dataLocations.clear();
             loadDataLocations(ele, _dataLocations);
             setModified(false);
-            return true;
+            if(_evalLocs ==null) {
+                _evalLocs = new ArrayList<>();
+            }
+            _evalLocs.clear();
+            for (DataLocation dloc :_dataLocations){
+                loadEvalLocs(ele, dloc);
+            }
         } else {
-            System.out.println("WML Document was null.");
+            System.out.println("XML Document was null.");
             return false;
         }
+        return true;
     }
+public boolean loadEvalLocs(Element ele, DataLocation dloc) {
+    //                read the locations in the list
+    //                return EvaluationLocations
+    //                add them to the _evalLoc
 
+    Element locationRoot = ele.getChild(EvalLocationElement);
+    List objLocations = locationRoot.getChildren(); //these are the "Location" elements
+    for (Object locObj : objLocations) {
+        Element eleLocation = (Element) locObj;
+        if (dloc.getName().equals(eleLocation.getAttributeValue("Name"))) {
+            for (Object e : eleLocation.getChildren()) {
+                Element eleEvaluations = (Element) e;
+                _evalLocs.add(EvaluationLocation.readFromXML(eleEvaluations, dloc));
+            }
+        }
+    }
+    return true;
+}
     public void setComputeOptions(ComputeOptions opts) {
         _computeOptions = opts;
     }
@@ -204,7 +249,7 @@ public class IRAlt extends SelfContainedPluginAlt {
             return _dataLocations;
         }
         List<DataLocation> dlList = new ArrayList<>();
-        //create a default location so that links can be initialized.
+        //if there are no dataLocations, create a default location so that links can be initialized.
         DataLocation dloc = new DataLocation(this.getModelAlt(), _name, "Any");
         dlList.add(dloc);
         return dlList;
