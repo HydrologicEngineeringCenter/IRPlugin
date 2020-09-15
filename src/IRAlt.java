@@ -89,6 +89,7 @@ public class IRAlt extends SelfContainedPluginAlt {
                 _dataLocations = new ArrayList<>();
             }
             _dataLocations.clear();
+//            Loading DataLocations from XML into the _dataLocations list
             loadDataLocations(ele, _dataLocations);
             setModified(false);
             if(_evalLocs ==null) {
@@ -242,7 +243,7 @@ public boolean loadEvalLocs(Element ele, DataLocation dloc) {
 //                I believe this if block is only initiated for output locations.
                 if (p.aPart().equals("") && p.bPart().equals("") && p.cPart().equals("") && p.dPart().equals("") && p.ePart().equals("") && p.fPart().equals("")) {
                     if (validLinkedToDssPath(dl)) {
-                        setDssParts(dl);
+//                        setDssParts(dl);
                     }
                 }
             }
@@ -252,6 +253,7 @@ public boolean loadEvalLocs(Element ele, DataLocation dloc) {
         //if there are no dataLocations, create a default location so that links can be initialized.
         DataLocation dloc = new DataLocation(this.getModelAlt(), _name, "Any");
         dlList.add(dloc);
+        _dataLocations.add(dloc);
         return dlList;
     }
 
@@ -261,24 +263,26 @@ public boolean loadEvalLocs(Element ele, DataLocation dloc) {
         return !(dssPath == null || dssPath.isEmpty());
     }
 
-    private void setDssParts(DataLocation dl) {
-        DataLocation linkedTo = dl.getLinkedToLocation();
-        String dssPath = linkedTo.getDssPath();
-        DSSPathname p = new DSSPathname(dssPath);
-        String[] parts = p.getParts();
-        parts[1] = parts[1] + " Output";
-        ModelAlternative malt = this.getModelAlt();
-        malt.setProgram(IRMain.PluginName);
-        p.setParts(parts);
-        dl.setDssPath(p.getPathname());
-    }
+//    private void setDssParts(DataLocation dl) {
+////        sets output DSSPaths
+//        DataLocation linkedTo = dl.getLinkedToLocation();
+//        String dssPath = linkedTo.getDssPath();
+//        DSSPathname p = new DSSPathname(dssPath);
+//        String[] parts = p.getParts();
+//        parts[1] = parts[1] + " Output";
+//        ModelAlternative malt = this.getModelAlt();
+//        malt.setProgram(IRMain.PluginName);
+//        p.setParts(parts);
+//        dl.setDssPath(p.getPathname());
+//    }
 
     public List<DataLocation> getInputDataLocations() {
         return defaultDataLocations();
     }
 
     public List<DataLocation> getOutputDataLocations() {
-        return defaultDataLocations();
+        ArrayList<DataLocation> emptyOutputLocations = new ArrayList<>();
+        return emptyOutputLocations;
     }
 
     public boolean setDataLocations(List<DataLocation> dataLocations) {
@@ -290,7 +294,7 @@ public boolean loadEvalLocs(Element ele, DataLocation dloc) {
                 String dssPath = linkedTo.getDssPath();
                 if (validLinkedToDssPath(dl)) {
                     setModified(true);
-                    setDssParts(dl);
+//                    setDssParts(dl);
                     _dataLocations.set(i, dl);
                     retval = true;
                 }
@@ -299,7 +303,7 @@ public boolean loadEvalLocs(Element ele, DataLocation dloc) {
                 String dssPath = linkedTo.getDssPath();
                 if (validLinkedToDssPath(dl)) {
                     setModified(true);
-                    setDssParts(dl);
+//                    setDssParts(dl);
                     retval = true;
                 }
             }
