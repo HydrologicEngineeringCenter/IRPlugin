@@ -152,7 +152,7 @@ public boolean loadEvalLocs(Element ele, DataLocation dloc) {
             forecastDSSId.setEndTime(endTime);
             addComputeMessage("Computing Evalutaion Location Number "+ i + el.get_location().getName());
             addComputeMessage("Reading " + dsspathname + " from " + dssFilePath+ System.lineSeparator());
-            el.compute(forecastDSSId);
+            el.compute(forecastDSSId, this);
         }
 //        for (DataLocation dl : _dataLocations) {
 //            String dssPath = dl.getLinkedToLocation().getDssPath();

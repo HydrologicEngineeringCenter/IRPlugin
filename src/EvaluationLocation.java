@@ -60,7 +60,7 @@ public class EvaluationLocation {
         return new EvaluationLocation(loc, value, op, act);
     }
 
-    public boolean compute(DSSIdentifier DSSid) {
+    public boolean compute(DSSIdentifier DSSid, IRAlt iraLt) {
 
         DSSPathname path = new DSSPathname(DSSid.getDSSPath());
         TimeSeriesContainer tsc = DssFileManagerImpl.getDssFileManager().readTS(DSSid, false);
@@ -71,7 +71,8 @@ public class EvaluationLocation {
                 HecTime hectime = new HecTime();
                 hectime.set(times);
                 String humantime = hectime.dateAndTime();
-                        System.out.println(" Exceeded Threshold  " + _EvalValue + " at " + this.get_location().getName() + " " + this.get_location().getModelToLinkTo() + " at time " +humantime);
+                iraLt.addComputeMessage(" Exceeded Threshold  " + _EvalValue + " at " + this.get_location().getName() + " " + this.get_location().getModelToLinkTo() + " at time " +humantime);
+                System.out.println(" Exceeded Threshold  " + _EvalValue + " at " + this.get_location().getName() + " " + this.get_location().getModelToLinkTo() + " at time " +humantime);
                 System.out.println("");
             }
         }
