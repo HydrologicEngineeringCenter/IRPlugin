@@ -142,7 +142,7 @@ public boolean loadEvalLocs(Element ele, DataLocation dloc) {
         hec2.rts.model.ComputeOptions cco = (hec2.rts.model.ComputeOptions) _computeOptions;
         String dssFilePath = cco.getDssFilename();
         HecTime startTime = (_computeOptions.getRunTimeWindow().getStartTime());
-        HecTime endTime = (_computeOptions.getRunTimeWindow().getStartTime());
+        HecTime endTime = (_computeOptions.getRunTimeWindow().getEndTime());
         int i =0;
         for (EvaluationLocation el :_evalLocs){
             i=i+1;

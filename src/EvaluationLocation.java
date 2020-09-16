@@ -64,12 +64,14 @@ public class EvaluationLocation {
 
         DSSPathname path = new DSSPathname(DSSid.getDSSPath());
         TimeSeriesContainer tsc = DssFileManagerImpl.getDssFileManager().readTS(DSSid, false);
-        for (int i = 0; i < tsc.values.length; i++) {
+        for (int i = 0; i < tsc.values.length; i++){
+            System.out.println(tsc.values[i]);
             if (tsc.values[i] > _EvalValue) {
                 int times = tsc.times[i];
-                HecTime hectime = new HecTime(times);
-                String humantime = hectime.dateAndTime(2);
-                System.out.println(" Exceeded Threshold  " + _EvalValue + " at " + this.get_location().getName() + " " + this.get_location().getModelToLinkTo() + " at time " +humantime);
+                HecTime hectime = new HecTime();
+                hectime.set(times);
+                String humantime = hectime.dateAndTime();
+                        System.out.println(" Exceeded Threshold  " + _EvalValue + " at " + this.get_location().getName() + " " + this.get_location().getModelToLinkTo() + " at time " +humantime);
                 System.out.println("");
             }
         }
