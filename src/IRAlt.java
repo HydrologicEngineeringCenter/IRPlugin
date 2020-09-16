@@ -1,6 +1,7 @@
 import com.rma.io.DssFileManagerImpl;
 import com.rma.io.RmaFile;
 import hec.heclib.dss.HecDSSDataAttributes;
+import hec.heclib.util.HecTime;
 import hec.io.DSSIdentifier;
 import hec.io.TimeSeriesContainer;
 import hec2.model.DataLocation;
@@ -46,11 +47,12 @@ public class IRAlt extends SelfContainedPluginAlt {
                 saveDataLocations(root, _dataLocations);
             }
             Element evaluationLocations = new Element(EvalLocationElement);
-            if (_evalLocs!= null){
+            if  (_evalLocs!= null){
                 for (DataLocation dl : _dataLocations){
                     Element locationElement = new Element("Location");
                     locationElement.setAttribute("Name", dl.getName());
                     locationElement.setAttribute("Parameter", dl.getParameter());
+// testing for creating evalLocs    _evalLocs.add(new EvaluationLocation(dl,5,"GreaterThan","ShowMessage"));
                     for(EvaluationLocation el : _evalLocs){
                         //add to the element.
                         if(el.get_location().getName().equals(dl.getName())){
@@ -138,85 +140,70 @@ public boolean loadEvalLocs(Element ele, DataLocation dloc) {
 //        is casting to hec2.rts.model.ComputeOptions required?_computeOptions is of type hec2.plugin.model.ComputeOptions
 //        hec2.rts.model.ComputeOptions extends hec2.plugin.model.ComputeOptions
         hec2.rts.model.ComputeOptions cco = (hec2.rts.model.ComputeOptions) _computeOptions;
-        double multiplier = 2.0;
         String dssFilePath = cco.getDssFilename();
-        for (DataLocation dl : _dataLocations) {
-            String dssPath = dl.getLinkedToLocation().getDssPath();
-//            read input TS
-            TimeSeriesContainer tsc = readInputTS(dssFilePath, dssPath);
-            if (tsc == null) {
-                addComputeErrorMessage("The DSS pathname provided " + dssPath + " was not found in " + dssFilePath);
-                return false;
-            }
-//            multiply input data
-            TimeSeriesContainer output = updateTS(tsc, multiplier);
-//            write output data
-            if (!writeOutTS(output, dl, dssFilePath)) {
-                addComputeErrorMessage("Could not write to " + output.getFullName() + " in " + dssFilePath);
-                returnValue = false;
-            }
+        HecTime startTime = (_computeOptions.getRunTimeWindow().getStartTime());
+        HecTime endTime = (_computeOptions.getRunTimeWindow().getStartTime());
+        int i =0;
+        for (EvaluationLocation el :_evalLocs){
+            i=i+1;
+            String dsspathname =  el.get_location().getLinkedToLocation().getDssPath();
+            DSSIdentifier forecastDSSId = new DSSIdentifier(dssFilePath, dsspathname);
+            forecastDSSId.setStartTime(startTime);
+            forecastDSSId.setEndTime(endTime);
+            addComputeMessage("Computing Evalutaion Location Number "+ i + el.get_location().getName());
+            addComputeMessage("Reading " + dsspathname + " from " + dssFilePath+ System.lineSeparator());
+            el.compute(forecastDSSId);
         }
+//        for (DataLocation dl : _dataLocations) {
+//            String dssPath = dl.getLinkedToLocation().getDssPath();
+////            read input TS
+//            TimeSeriesContainer tsc = readInputTS(dssFilePath, dssPath);
+//            if (tsc == null) {
+//                addComputeErrorMessage("The DSS pathname provided " + dssPath + " was not found in " + dssFilePath);
+//                return false;
+//            }
+////            multiply input data
+//            TimeSeriesContainer output = updateTS(tsc, multiplier);
+////            write output data
+//            if (!writeOutTS(output, dl, dssFilePath)) {
+//                addComputeErrorMessage("Could not write to " + output.getFullName() + " in " + dssFilePath);
+//                returnValue = false;
+//            }
+//        }
         return returnValue;
     }
 
-    private TimeSeriesContainer readInputTS(String DssFilePath, String dssPath) {
-        DSSPathname pathName = new DSSPathname(dssPath);
-        String InputFPart = pathName.getFPart();
-        DSSIdentifier forecastDSS = new DSSIdentifier(DssFilePath, pathName.getPathname());
-        forecastDSS.setStartTime(_computeOptions.getRunTimeWindow().getStartTime());
-        forecastDSS.setEndTime(_computeOptions.getRunTimeWindow().getEndTime());
-        int type = DssFileManagerImpl.getDssFileManager().getRecordType(forecastDSS);
-        addComputeMessage("Reading " + dssPath + " from" + DssFilePath);
-        if ((HecDSSDataAttributes.REGULAR_TIME_SERIES <= type && type < HecDSSDataAttributes.PAIRED)) {
-            boolean exist = DssFileManagerImpl.getDssFileManager().exists(forecastDSS);
-            TimeSeriesContainer fcstTsc = null;
-            if (!exist) {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            fcstTsc = DssFileManagerImpl.getDssFileManager().readTS(forecastDSS, true);
-            if (fcstTsc != null) {
-                exist = fcstTsc.numberValues > 0;
-            }
-            if (exist) {
-                return fcstTsc;
-            } else {
-                return null;
-            }
-        } else {
-            return null;
-        }
-    }
-
-    private TimeSeriesContainer updateTS(TimeSeriesContainer input, double multiplier) {
-        TimeSeriesContainer outTSC = (TimeSeriesContainer) input.clone();
-        double[] vals = outTSC.values;
-        for (int i = 0; i < (vals.length); i++) {
-            vals[i] = vals[i] * multiplier;
-        }
-        outTSC.values = vals;
-        return outTSC;
-    }
-
-    public boolean writeOutTS(TimeSeriesContainer tsc, DataLocation dl, String dssFilePath) {
-        DSSPathname pathname = new DSSPathname(dl.getDssPath());
-        pathname.setFPart(_computeOptions.getFpart());
-        DSSIdentifier forecastDSS = new DSSIdentifier(dssFilePath, pathname.getPathname());
-        forecastDSS.setStartTime(_computeOptions.getRunTimeWindow().getStartTime());
-        forecastDSS.setEndTime(_computeOptions.getRunTimeWindow().getEndTime());
-        tsc.fullName = pathname.getPathname();
-        tsc.fileName = _computeOptions.getDssFilename();
-        boolean exist = DssFileManagerImpl.getDssFileManager().exists(forecastDSS);
-        if (exist) {
-            if (!_computeOptions.shouldForceCompute()) {
-                return true;
-            }
-        }
-        return 0 == DssFileManagerImpl.getDssFileManager().write(tsc);
-    }
+//    private TimeSeriesContainer readInputTS(String DssFilePath, String dssPath) {
+//        DSSPathname pathName = new DSSPathname(dssPath);
+//        String InputFPart = pathName.getFPart();
+//        DSSIdentifier forecastDSS = new DSSIdentifier(DssFilePath, pathName.getPathname());
+//        forecastDSS.setStartTime(_computeOptions.getRunTimeWindow().getStartTime());
+//        forecastDSS.setEndTime(_computeOptions.getRunTimeWindow().getEndTime());
+//        int type = DssFileManagerImpl.getDssFileManager().getRecordType(forecastDSS);
+//        addComputeMessage("Reading " + dssPath + " from" + DssFilePath);
+//        if ((HecDSSDataAttributes.REGULAR_TIME_SERIES <= type && type < HecDSSDataAttributes.PAIRED)) {
+//            boolean exist = DssFileManagerImpl.getDssFileManager().exists(forecastDSS);
+//            TimeSeriesContainer fcstTsc = null;
+//            if (!exist) {
+//                try {
+//                    Thread.sleep(1000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//            fcstTsc = DssFileManagerImpl.getDssFileManager().readTS(forecastDSS, true);
+//            if (fcstTsc != null) {
+//                exist = fcstTsc.numberValues > 0;
+//            }
+//            if (exist) {
+//                return fcstTsc;
+//            } else {
+//                return null;
+//            }
+//        } else {
+//            return null;
+//        }
+//    }
 
     @Override
     public int getModelCount() {
@@ -262,19 +249,6 @@ public boolean loadEvalLocs(Element ele, DataLocation dloc) {
         String dssPath = linkedTo.getDssPath();
         return !(dssPath == null || dssPath.isEmpty());
     }
-
-//    private void setDssParts(DataLocation dl) {
-////        sets output DSSPaths
-//        DataLocation linkedTo = dl.getLinkedToLocation();
-//        String dssPath = linkedTo.getDssPath();
-//        DSSPathname p = new DSSPathname(dssPath);
-//        String[] parts = p.getParts();
-//        parts[1] = parts[1] + " Output";
-//        ModelAlternative malt = this.getModelAlt();
-//        malt.setProgram(IRMain.PluginName);
-//        p.setParts(parts);
-//        dl.setDssPath(p.getPathname());
-//    }
 
     public List<DataLocation> getInputDataLocations() {
         return defaultDataLocations();
