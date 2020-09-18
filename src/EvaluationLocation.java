@@ -70,9 +70,14 @@ public class EvaluationLocation {
         return new EvaluationLocation(loc, value, op, act, actM);
     }
 
-    public boolean compute(DSSIdentifier DSSid, IRAlt iralt) {
+    public CompResult compute(DSSIdentifier DSSid) {
+        List<String> compMessages = new ArrayList<>();
+        List<String> errorMessages = new ArrayList<>();
+        boolean compSuccesss = true;
         ArrayList<String> actList = parseActionsString(this.get_actions());
+//        Need to place some checks on whether the data is there
         TimeSeriesContainer tsc = DssFileManagerImpl.getDssFileManager().readTS(DSSid, false);
+        outerloop:
         for (int i = 0; i < tsc.values.length; i++) {
             System.out.println(tsc.values[i]);
                 if (tsc.values[i] > _evalValue) {
@@ -80,21 +85,26 @@ public class EvaluationLocation {
                     HecTime hectime = new HecTime();
                     hectime.set(times);
                     String humantime = hectime.dateAndTime();
-//                    for (Action a :_actActions){
-//                        a.computeAction(iralt, this, humantime );
-//                    }
                     for (String act : actList) {
-                        if (act.compareToIgnoreCase("ShowMessage") != 0) {
-                            iralt.addComputeMessage(" Exceeded Threshold  " + _evalValue + " at: \n" + this.get_location().getName() + " " + this.get_location().getModelToLinkTo() + " at time " + humantime);
-                            iralt.addComputeMessage(get_actionMessage()+"\n");
-                        } else if (act.compareToIgnoreCase("ShowDialog") != 0) {
+                        if (act.compareToIgnoreCase("ShowMessage") == 0) {
+                            compMessages.add(" Exceeded Threshold  " + _evalValue + " at: \n" + this.get_location().getName() + " " + this.get_location().getModelToLinkTo() + " at time " + humantime);
+                            compMessages.add(get_actionMessage()+"\n");
+                        } else if (act.compareToIgnoreCase("ShowDialog") == 0) {
                             JOptionPane.showMessageDialog(Browser.getBrowserFrame(), (" Exceeded Threshold  " + _evalValue + " at: \n" + this.get_location().getName() + " " + this.get_location().getModelToLinkTo() + " at time " + humantime +"\n"+get_actionMessage()), "IR Message", JOptionPane.NO_OPTION);
+                            break outerloop;
                         } else
-                            iralt.addComputeErrorMessage("'" + act + "'" + " is not a valid action");
+                            errorMessages.add("'" + act + "'" + " is not a valid action");
+                            compSuccesss = false;
                     }
                 }
             }
-        return true;
+        CompResult result = new CompResult.Builder()
+                .compMessages(compMessages)
+                .compSuccess(compSuccesss)
+                .errorMessages(errorMessages)
+                .build();
+
+        return result;
     }
     public static ArrayList<String> parseActionsString(String actions){
         String[] elements = actions.split(",");

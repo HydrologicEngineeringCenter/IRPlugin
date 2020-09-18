@@ -153,58 +153,17 @@ public boolean loadEvalLocs(Element ele, DataLocation dloc) {
             forecastDSSId.setEndTime(endTime);
             addComputeMessage("Computing Evalutaion Location Number "+ i + el.get_location().getName());
             addComputeMessage("Reading " + dsspathname + " from " + dssFilePath+ System.lineSeparator());
-            el.compute(forecastDSSId, this);
+            CompResult results = el.compute(forecastDSSId);
+            for (String messages:results.computeMessages) {
+                addComputeMessage(messages);
+            }
+            for (String emessages:results.errorMessages){
+                addComputeErrorMessage(emessages);
+
+            }
         }
-//        for (DataLocation dl : _dataLocations) {
-//            String dssPath = dl.getLinkedToLocation().getDssPath();
-////            read input TS
-//            TimeSeriesContainer tsc = readInputTS(dssFilePath, dssPath);
-//            if (tsc == null) {
-//                addComputeErrorMessage("The DSS pathname provided " + dssPath + " was not found in " + dssFilePath);
-//                return false;
-//            }
-////            multiply input data
-//            TimeSeriesContainer output = updateTS(tsc, multiplier);
-////            write output data
-//            if (!writeOutTS(output, dl, dssFilePath)) {
-//                addComputeErrorMessage("Could not write to " + output.getFullName() + " in " + dssFilePath);
-//                returnValue = false;
-//            }
-//        }
         return returnValue;
     }
-
-//    private TimeSeriesContainer readInputTS(String DssFilePath, String dssPath) {
-//        DSSPathname pathName = new DSSPathname(dssPath);
-//        String InputFPart = pathName.getFPart();
-//        DSSIdentifier forecastDSS = new DSSIdentifier(DssFilePath, pathName.getPathname());
-//        forecastDSS.setStartTime(_computeOptions.getRunTimeWindow().getStartTime());
-//        forecastDSS.setEndTime(_computeOptions.getRunTimeWindow().getEndTime());
-//        int type = DssFileManagerImpl.getDssFileManager().getRecordType(forecastDSS);
-//        addComputeMessage("Reading " + dssPath + " from" + DssFilePath);
-//        if ((HecDSSDataAttributes.REGULAR_TIME_SERIES <= type && type < HecDSSDataAttributes.PAIRED)) {
-//            boolean exist = DssFileManagerImpl.getDssFileManager().exists(forecastDSS);
-//            TimeSeriesContainer fcstTsc = null;
-//            if (!exist) {
-//                try {
-//                    Thread.sleep(1000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//            fcstTsc = DssFileManagerImpl.getDssFileManager().readTS(forecastDSS, true);
-//            if (fcstTsc != null) {
-//                exist = fcstTsc.numberValues > 0;
-//            }
-//            if (exist) {
-//                return fcstTsc;
-//            } else {
-//                return null;
-//            }
-//        } else {
-//            return null;
-//        }
-//    }
 
     @Override
     public int getModelCount() {
