@@ -71,7 +71,7 @@ public class EvaluationLocation {
         List<String> compMessages = new ArrayList<>();
         List<String> errorMessages = new ArrayList<>();
         Map<String,Double> reportTimeValue = new LinkedHashMap<>();
-        boolean compSuccesss = true;
+        boolean compSuccess = true;
         ArrayList<String> actList = parseActionsString(this.get_actions());
 //        Need to place some checks on whether the data is there
         TimeSeriesContainer tsc = DssFileManagerImpl.getDssFileManager().readTS(DSSid, false);
@@ -105,13 +105,13 @@ public class EvaluationLocation {
                 JOptionPane.showMessageDialog(Browser.getBrowserFrame(), label, "IR Message", JOptionPane.INFORMATION_MESSAGE);
             } else {
                 errorMessages.add("'" + act + "'" + " is not a valid action");
-                compSuccesss = false;
+                compSuccess = false;
             }
         }
 
         CompResult result = new CompResult.Builder()
                 .compMessages(compMessages)
-                .compSuccess(compSuccesss)
+                .compSuccess(compSuccess)
                 .errorMessages(errorMessages)
                 .build();
 
