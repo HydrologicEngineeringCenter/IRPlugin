@@ -9,9 +9,7 @@ import hec2.model.DataLocation;
 import org.jdom.Element;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class EvaluationLocation {
     private Integer _evalValue;
@@ -73,11 +71,11 @@ public class EvaluationLocation {
     public CompResult compute(DSSIdentifier DSSid) {
         List<String> compMessages = new ArrayList<>();
         List<String> errorMessages = new ArrayList<>();
+        Map<String,Double> reportTimeValue = new LinkedHashMap<>();
         boolean compSuccesss = true;
         ArrayList<String> actList = parseActionsString(this.get_actions());
 //        Need to place some checks on whether the data is there
         TimeSeriesContainer tsc = DssFileManagerImpl.getDssFileManager().readTS(DSSid, false);
-        outerloop:
         for (int i = 0; i < tsc.values.length; i++) {
             System.out.println(tsc.values[i]);
                 if (tsc.values[i] > _evalValue) {
@@ -85,19 +83,33 @@ public class EvaluationLocation {
                     HecTime hectime = new HecTime();
                     hectime.set(times);
                     String humantime = hectime.dateAndTime();
-                    for (String act : actList) {
-                        if (act.compareToIgnoreCase("ShowMessage") == 0) {
-                            compMessages.add(" Exceeded Threshold  " + _evalValue + " at: \n" + this.get_location().getName() + " " + this.get_location().getModelToLinkTo() + " at time " + humantime);
-                            compMessages.add(get_actionMessage()+"\n");
-                        } else if (act.compareToIgnoreCase("ShowDialog") == 0) {
-                            JOptionPane.showMessageDialog(Browser.getBrowserFrame(), (" Exceeded Threshold  " + _evalValue + " at: \n" + this.get_location().getName() + " " + this.get_location().getModelToLinkTo() + " at time " + humantime +"\n"+get_actionMessage()), "IR Message", JOptionPane.NO_OPTION);
-                            break outerloop;
-                        } else
-                            errorMessages.add("'" + act + "'" + " is not a valid action");
-                            compSuccesss = false;
-                    }
+                    reportTimeValue.put(humantime, tsc.values[i]);
                 }
+        }
+        Map.Entry<String,Double> firstpair =  reportTimeValue.entrySet().iterator().next();
+        for (String act : actList) {
+            if (act.compareToIgnoreCase("ShowMessage") == 0) {
+                compMessages.add("---------  Threshold value was exceeded--------- \n"
+                        + "THRESHOLD VALUE: " + _evalValue + "\n"
+                        + "TIME OF EXCEEDANCE:" + firstpair.getKey() + "\n"
+                        + "ACTION MESSAGE: " + get_actionMessage() + "\n"
+                        + "EVALUATION LOCATION: " + this.get_location().getName() + "\n"
+                        + "MODEL ALTERNATIVE: " + this.get_location().getModelToLinkTo());
+            } else if (act.compareToIgnoreCase("ShowDialog") == 0) {
+                String label =("--------- Threshold value was exceeded---------- \n"
+                        + "THRESHOLD VALUE: " + _evalValue + "\n"
+                        + "TIME OF EXCEEDANCE:" + firstpair.getKey() + "\n"
+                        + "ACTION MESSAGE: " + get_actionMessage() + "\n"
+                        + "EVALUATION LOCATION: " + this.get_location().getName() + "\n"
+                        + "MODEL ALTERNATIVE: " + this.get_location().getModelToLinkTo() + "\n");
+//                label.setHorizontalAlignment(SwingConstants.CENTER);
+                JOptionPane.showMessageDialog(Browser.getBrowserFrame(), label, "IR Message", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                errorMessages.add("'" + act + "'" + " is not a valid action");
+                compSuccesss = false;
             }
+        }
+
         CompResult result = new CompResult.Builder()
                 .compMessages(compMessages)
                 .compSuccess(compSuccesss)
