@@ -52,7 +52,8 @@ public class IRAlt extends SelfContainedPluginAlt {
                     Element locationElement = new Element("Location");
                     locationElement.setAttribute("Name", dl.getName());
                     locationElement.setAttribute("Parameter", dl.getParameter());
-// testing for creating evalLocs    _evalLocs.add(new EvaluationLocation(dl,5,"GreaterThan","ShowMessage"));
+//                    Testing to add a new evalLoc
+//                    _evalLocs.add(new EvaluationLocation(dl,15,"GreaterThan","ShowMessage","GET IN THE ARK!!!"));
                     for(EvaluationLocation el : _evalLocs){
                         //add to the element.
                         if(el.get_location().getName().equals(dl.getName())){

@@ -17,8 +17,9 @@ public class EvaluationLocation {
     private Integer _evalValue;
     private String _operator;
     private String _actions;
+    private ArrayList<Action> _actActions;
     private DataLocation _location;
-//    private String _actionMessage;
+    private String _actionMessage;
 
     public Integer get_evalValue() {
         return _evalValue;
@@ -36,16 +37,16 @@ public class EvaluationLocation {
         return _location;
     }
 
-//    public String get_actionMessage() {
-//        return _actionMessage;
-//    }
+    public String get_actionMessage() {
+        return _actionMessage;
+    }
 
-    public EvaluationLocation(DataLocation location, Integer evalValue, String operator, String actions) {
+    public EvaluationLocation(DataLocation location, Integer evalValue, String operator, String actions, String actionMessage) {
         _location = location;
         _evalValue = evalValue;
         _operator = operator;
         _actions = actions;
-//        _actionMessage = actionMessage;
+        _actionMessage = actionMessage;
     }
 
     public Element writeToXML() {
@@ -54,7 +55,7 @@ public class EvaluationLocation {
         ele.setAttribute("Value", get_evalValue().toString());
         ele.setAttribute("Operator", get_operator().toString());
         ele.setAttribute("Actions", get_actions().toString());
-//        ele.setAttribute("AMessage", get_actionMessage().toString());
+        ele.setAttribute("AMessage", get_actionMessage().toString());
         return ele;
     }
 
@@ -65,32 +66,34 @@ public class EvaluationLocation {
         Integer value = Integer.parseInt(ele.getAttribute("Value").getValue());
         String op = ele.getAttribute("Operator").getValue();
         String act = ele.getAttribute("Actions").getValue();
-//        String actM = ele.getAttribute("AMessage").getValue();
-        return new EvaluationLocation(loc, value, op, act);
+        String actM = ele.getAttribute("AMessage").getValue();
+        return new EvaluationLocation(loc, value, op, act, actM);
     }
 
-    public boolean compute(DSSIdentifier DSSid, IRAlt iraLt) {
+    public boolean compute(DSSIdentifier DSSid, IRAlt iralt) {
         ArrayList<String> actList = parseActionsString(this.get_actions());
         TimeSeriesContainer tsc = DssFileManagerImpl.getDssFileManager().readTS(DSSid, false);
-        for (int i = 0; i < tsc.values.length; i++){
+        for (int i = 0; i < tsc.values.length; i++) {
             System.out.println(tsc.values[i]);
-            if (tsc.values[i] > _evalValue) {
-                int times = tsc.times[i];
-                HecTime hectime = new HecTime();
-                hectime.set(times);
-                String humantime = hectime.dateAndTime();
-                for (String act: actList){
-                    if (act.compareToIgnoreCase("ShowMessage")!=0){
-                        iraLt.addComputeMessage(" Exceeded Threshold  " + _evalValue + " at: \n" + this.get_location().getName() + " " + this.get_location().getModelToLinkTo() + " at time " +humantime);
+                if (tsc.values[i] > _evalValue) {
+                    int times = tsc.times[i];
+                    HecTime hectime = new HecTime();
+                    hectime.set(times);
+                    String humantime = hectime.dateAndTime();
+//                    for (Action a :_actActions){
+//                        a.computeAction(iralt, this, humantime );
+//                    }
+                    for (String act : actList) {
+                        if (act.compareToIgnoreCase("ShowMessage") != 0) {
+                            iralt.addComputeMessage(" Exceeded Threshold  " + _evalValue + " at: \n" + this.get_location().getName() + " " + this.get_location().getModelToLinkTo() + " at time " + humantime);
+                            iralt.addComputeMessage(get_actionMessage()+"\n");
+                        } else if (act.compareToIgnoreCase("ShowDialog") != 0) {
+                            JOptionPane.showMessageDialog(Browser.getBrowserFrame(), (" Exceeded Threshold  " + _evalValue + " at: \n" + this.get_location().getName() + " " + this.get_location().getModelToLinkTo() + " at time " + humantime +"\n"+get_actionMessage()), "IR Message", JOptionPane.NO_OPTION);
+                        } else
+                            iralt.addComputeErrorMessage("'" + act + "'" + " is not a valid action");
                     }
-                    else if (act.compareToIgnoreCase("ShowDialog")!=0){
-                        JOptionPane.showMessageDialog(Browser.getBrowserFrame(), (" Exceeded Threshold  " + _evalValue + " at: \n" + this.get_location().getName() + " " + this.get_location().getModelToLinkTo() + " at time " +humantime), "IR Message",JOptionPane.NO_OPTION);
-                    }
-                    else
-                    iraLt.addComputeErrorMessage("'"+act+"'"+ " is not a valid action");
                 }
             }
-        }
         return true;
     }
     public static ArrayList<String> parseActionsString(String actions){
