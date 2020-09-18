@@ -15,7 +15,6 @@ public class EvaluationLocation {
     private Integer _evalValue;
     private String _operator;
     private String _actions;
-    private ArrayList<Action> _actActions;
     private DataLocation _location;
     private String _actionMessage;
 
