@@ -1,3 +1,5 @@
+package main.java;
+
 import com.rma.client.Browser;
 import com.rma.io.DssFileManagerImpl;
 

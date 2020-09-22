@@ -1,3 +1,5 @@
+package main.java;
+
 import com.rma.io.DssFileManagerImpl;
 import com.rma.io.RmaFile;
 import hec.heclib.dss.HecDSSDataAttributes;

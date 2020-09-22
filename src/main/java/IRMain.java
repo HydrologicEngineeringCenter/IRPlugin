@@ -1,3 +1,6 @@
+package main.java;
+
+import UI.Controller;
 import com.rma.factories.NewObjectFactory;
 import com.rma.io.RmaFile;
 import hec2.map.GraphicElement;
@@ -15,11 +18,18 @@ import hec2.rts.plugin.RtsPlugin;
 import hec2.rts.plugin.RtsPluginManager;
 import hec2.rts.plugin.action.ComputeModelAction;
 import hec2.rts.ui.RtsTabType;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import rma.util.RMAFilenameFilter;
 import rma.util.RMAIO;
 import com.rma.io.FileManagerImpl;
 
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +59,43 @@ public class IRMain extends AbstractSelfContainedPlugin<IRAlt> implements RtsPlu
 
     @Override
     public void editAlternative(IRAlt IRAlt) {
+//        UIMain.main(new String[]{});
+        Window[] windows = Window.getWindows();
+        for (Window window : windows){
+            if (window instanceof Frame){
+                Frame frame = (Frame) window;
+                if (frame.isVisible() && frame.getTitle().equals("Alternative Editor")) {
+                    frame.toFront();
+                    frame.repaint();
+                    return;
+            }
+            }
+        }
+        JFrame window = new JFrame();
+        window.setTitle("Alternative Editor");
+        JFXPanel jfxPanel = new JFXPanel();
+        Platform.runLater(() -> {
+
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/UI/sample.fxml"));
+                Parent root = loader.load();
+                jfxPanel.setScene(new Scene(root, 400, 200));
+                // Give the controller access to the main app
+                Controller controller = loader.getController();
+//                controller.setMainApp();
+
+                SwingUtilities.invokeLater(() -> {
+                    window.add(jfxPanel);
+                    window.pack();
+                    window.setVisible(true);
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        });
+
 
     }
 

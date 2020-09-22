@@ -1,3 +1,5 @@
+package main.java;
+
 import com.rma.util.I18n;
 
 import java.util.ResourceBundle;

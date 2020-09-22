@@ -1,3 +1,5 @@
+package main.java;
+
 import com.rma.factories.AbstractNewObjectFactory;
 import com.rma.factories.NewObjectFactory;
 import com.rma.io.FileManagerImpl;
