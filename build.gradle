@@ -14,17 +14,18 @@ repositories {
 
 dependencies {
     compile 'junit:junit:4.12'
-    compile files ('../Programs/HEC/CWMS-v3.2.1.459b/CAVI/jar/rts.jar')
-    implementation ( 'mil.army.usace.hec:hecnfPluginAPI:v3.1@jar')
-    compile files ('../Programs/HEC/CWMS-v3.2.1.459b/CAVI/jar/rma.jar')
-    compile files ('../Programs/HEC/CWMS-v3.2.1.459b/CAVI/jar/rmadev.jar')
-    compile files ('../Programs/HEC/CWMS-v3.2.1.459b/CAVI/jar/sys/jdom-1.0.jar')
-    compile files ('../Programs/HEC/CWMS-v3.2.1.459b/CAVI/jar/heclib.jar')
-    compile files ('../Programs/HEC/CWMS-v3.2.1.459b/CAVI/common/jar/hecData.jar')
-    compile files ('../Programs/HEC/CWMS-v3.2.1.459b/CAVI/jar/hecMaps-v1.1-dev.jar')
-    compile files ('../Programs/HEC/CWMS-v3.2.1.459b/CAVI/jar/hecnf-v3.1.jar')
-    compile files ('../Programs/HEC/CWMS-v3.2.1.459b/CAVI/jar/rtsPluginAPI.jar')
-    compile files ('../Programs/HEC/CWMS-v3.2.1.459b/CAVI/jar/hec.jar')
+    implementation  'mil.army.usace.hec:hecnfPluginAPI:v3.1@jar'
+    implementation 'com.rmanet:rma:3.2.1.459b@jar'
+    implementation 'com.rmanet:rmadev:3.2.1.459b@jar'
+    implementation 'com.rmanet:rmadev:3.2.1.459b@jar'
+    implementation 'mil.army.usace.hec:heclib:3.2.1.459b@jar'
+    implementation 'mil.army.usace.hec:hecData:3.2.1.459b@jar'
+    implementation 'mil.army.usace.hec:hecMaps-v1.1:3.2.1.459b@jar'
+    implementation 'mil.army.usace.hec:hecnf:3.2.1.459b@jar'
+    implementation 'mil.army.usace.hec:rtsPluginAPI:3.2.1.459b@jar'
+    implementation 'mil.army.usace.hec:hec:3.2.1.459b@jar'
+    implementation 'jdom:jdom:1.0@jar'
+    implementation 'mil.army.usace:rts:3.2.1.459b@jar'
 }
 //jar {
 //    manifest {
