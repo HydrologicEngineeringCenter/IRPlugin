@@ -2,33 +2,27 @@ plugins {
     id 'java'
 }
 
-group 'org.example'
-version ''
+group 'mil.army.usace.hec'
+version '1.0-SNAPSHOT'
 
 repositories {
-    mavenCentral()
-}
-
-sourceSets {
-    main {
-        resources {
-            srcDirs = ["src/main/java"]
-            includes = ["**/*.fxml"]
-        }
+    maven {
+        url "https://www.hec.usace.army.mil/nexus/repository/maven-public/"
     }
+    mavenCentral()
 }
 
 dependencies {
     compile 'junit:junit:4.12'
     compile files ('../Programs/HEC/CWMS-v3.2.1.459b/CAVI/jar/rts.jar')
-    compile files ('../Programs/HEC/CWMS-v3.2.1.459b/CAVI/jar/hecnf-v3.1.jar')
+    implementation ( 'mil.army.usace.hec:hecnfPluginAPI:v3.1@jar')
     compile files ('../Programs/HEC/CWMS-v3.2.1.459b/CAVI/jar/rma.jar')
     compile files ('../Programs/HEC/CWMS-v3.2.1.459b/CAVI/jar/rmadev.jar')
     compile files ('../Programs/HEC/CWMS-v3.2.1.459b/CAVI/jar/sys/jdom-1.0.jar')
     compile files ('../Programs/HEC/CWMS-v3.2.1.459b/CAVI/jar/heclib.jar')
     compile files ('../Programs/HEC/CWMS-v3.2.1.459b/CAVI/common/jar/hecData.jar')
     compile files ('../Programs/HEC/CWMS-v3.2.1.459b/CAVI/jar/hecMaps-v1.1-dev.jar')
-    compile files ('../Programs/HEC/CWMS-v3.2.1.459b/CAVI/jar/hecnfPluginAPI-v3.1.jar')
+    compile files ('../Programs/HEC/CWMS-v3.2.1.459b/CAVI/jar/hecnf-v3.1.jar')
     compile files ('../Programs/HEC/CWMS-v3.2.1.459b/CAVI/jar/rtsPluginAPI.jar')
     compile files ('../Programs/HEC/CWMS-v3.2.1.459b/CAVI/jar/hec.jar')
 }
