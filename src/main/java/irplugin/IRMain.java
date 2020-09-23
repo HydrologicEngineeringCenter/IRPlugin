@@ -1,6 +1,6 @@
-package main.java;
+package irplugin;
 
-import UI.Controller;
+import alteditor.Controller;
 import com.rma.factories.NewObjectFactory;
 import com.rma.io.RmaFile;
 import hec2.map.GraphicElement;
@@ -77,7 +77,7 @@ public class IRMain extends AbstractSelfContainedPlugin<IRAlt> implements RtsPlu
         Platform.runLater(() -> {
 
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/UI/sample.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/alteditor/sample.fxml"));
                 Parent root = loader.load();
                 jfxPanel.setScene(new Scene(root, 400, 200));
                 // Give the controller access to the main app

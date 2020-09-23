@@ -1,4 +1,4 @@
-package main.java;
+package irplugin;
 
 import java.util.ArrayList;
 import java.util.List;

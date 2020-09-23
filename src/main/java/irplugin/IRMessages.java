@@ -1,4 +1,4 @@
-package main.java;
+package irplugin;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;

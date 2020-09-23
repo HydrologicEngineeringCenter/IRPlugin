@@ -1,4 +1,4 @@
-package main.java;
+package irplugin;
 
 import com.rma.util.I18n;
 

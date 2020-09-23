@@ -3,18 +3,21 @@ plugins {
 }
 
 group 'org.example'
-version '1.0-SNAPSHOT'
+version ''
 
 repositories {
     mavenCentral()
 }
+
 sourceSets {
     main {
-        java {
-            srcDirs = ['src']
+        resources {
+            srcDirs = ["src/main/java"]
+            includes = ["**/*.fxml"]
         }
     }
 }
+
 dependencies {
     compile 'junit:junit:4.12'
     compile files ('../Programs/HEC/CWMS-v3.2.1.459b/CAVI/jar/rts.jar')
@@ -28,4 +31,15 @@ dependencies {
     compile files ('../Programs/HEC/CWMS-v3.2.1.459b/CAVI/jar/hecnfPluginAPI-v3.1.jar')
     compile files ('../Programs/HEC/CWMS-v3.2.1.459b/CAVI/jar/rtsPluginAPI.jar')
     compile files ('../Programs/HEC/CWMS-v3.2.1.459b/CAVI/jar/hec.jar')
+}
+//jar {
+//    manifest {
+//        from 'META-INF/MANIFEST.MF'
+//    }
+//}
+
+jar {
+    manifest {
+        attributes 'RtsPluginMainClass': 'irplugin.IRMain'
+    }
 }

@@ -1,4 +1,4 @@
-package main.java;
+package irplugin;
 
 import com.rma.io.DssFileManagerImpl;
 import com.rma.io.RmaFile;

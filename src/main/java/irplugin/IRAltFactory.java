@@ -1,4 +1,4 @@
-package main.java;
+package irplugin;
 
 import com.rma.factories.AbstractNewObjectFactory;
 import com.rma.factories.NewObjectFactory;

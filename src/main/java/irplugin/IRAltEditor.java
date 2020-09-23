@@ -1,4 +1,4 @@
-package main.java;
+package irplugin;
 
 import com.rma.client.Browser;
 import com.rma.client.NewObjectDialog;
