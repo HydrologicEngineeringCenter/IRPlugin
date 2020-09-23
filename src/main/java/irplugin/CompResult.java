@@ -3,6 +3,8 @@ package irplugin;
 import java.util.ArrayList;
 import java.util.List;
 
+//Builds a list of compute messgea and error messages
+//to keep track of during a compute.
 public class CompResult {
     public boolean successfulCompute = false;
     public List<String> computeMessages = new ArrayList<>();
