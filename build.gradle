@@ -25,7 +25,7 @@ dependencies {
     implementation 'mil.army.usace.hec:rtsPluginAPI:3.2.1.459b@jar'
     implementation 'mil.army.usace.hec:hec:3.2.1.459b@jar'
     implementation 'jdom:jdom:1.0@jar'
-    implementation 'mil.army.usace:rts:3.2.1.459b@jar'
+    implementation 'mil.army.usace.hec:rts:3.2.1.459b@jar'
 }
 //jar {
 //    manifest {
