@@ -59,7 +59,8 @@ public class IRMain extends AbstractSelfContainedPlugin<IRAlt> implements RtsPlu
 
     @Override
     public void editAlternative(IRAlt IRAlt) {
-//        UIMain.main(new String[]{});
+//        UIMain.main(new String[]{});is to run UI main as is
+//        Below runs javaFX gui in a Jframe.
         Window[] windows = Window.getWindows();
         for (Window window : windows){
             if (window instanceof Frame){
