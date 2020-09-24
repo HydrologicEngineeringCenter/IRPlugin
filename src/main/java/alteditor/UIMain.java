@@ -10,13 +10,11 @@ public class UIMain extends Application {
     //thi si a pointless comment. again
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/sample.fxml"));
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.setTitle("IRP Alternative Editor");
         primaryStage.show();
-
-
     }
 
 

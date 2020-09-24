@@ -27,11 +27,7 @@ dependencies {
     implementation 'jdom:jdom:1.0@jar'
     implementation 'mil.army.usace.hec:rts:3.2.1.459b@jar'
 }
-//jar {
-//    manifest {
-//        from 'META-INF/MANIFEST.MF'
-//    }
-//}
+
 
 jar {
     manifest {
