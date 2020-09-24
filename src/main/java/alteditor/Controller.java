@@ -16,7 +16,8 @@ import java.util.ResourceBundle;
 
 import static javafx.application.Platform.exit;
 
-public class Controller implements Initializable {
+public class
+Controller implements Initializable {
     //    configeure Table
     @FXML
     private TableView<EditorEvalLocs> tableView;

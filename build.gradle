@@ -1,6 +1,7 @@
 plugins {
     id 'java'
 }
+archivesBaseName = "IRplugin"
 
 group 'mil.army.usace.hec'
 version '1.0-SNAPSHOT'
