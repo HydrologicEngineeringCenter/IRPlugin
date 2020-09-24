@@ -6,12 +6,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class UIMain extends Application {
+public class UIMainTester extends Application {
     //thi si a pointless comment. again
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("/sample.fxml"));
-        Scene scene = new Scene(root);
+        Scene scene = new Scene(root, 950, 400);
         primaryStage.setScene(scene);
         primaryStage.setTitle("IRP Alternative Editor");
         primaryStage.show();

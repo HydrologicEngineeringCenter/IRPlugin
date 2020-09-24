@@ -80,7 +80,7 @@ public class IRMain extends AbstractSelfContainedPlugin<IRAlt> implements RtsPlu
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample.fxml"));
                 Parent root = loader.load();
-                jfxPanel.setScene(new Scene(root, 400, 200));
+                jfxPanel.setScene(new Scene(root, 950, 400));
                 // Give the controller access to the main app
                 Controller controller = loader.getController();
 //                controller.setMainApp();

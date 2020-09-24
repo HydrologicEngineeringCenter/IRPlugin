@@ -39,8 +39,8 @@
                       <TableColumn fx:id="nameColumn" prefWidth="150.0" text="Location Name" />
                       <TableColumn fx:id="valueColumn" prefWidth="150.0" text="Threhold Value" />
                         <TableColumn fx:id="operatorColumn" prefWidth="150.0" text="Operator" />
-                        <TableColumn fx:id="actionColumn" prefWidth="150.0" text="Actions" />
-                        <TableColumn fx:id="messageColumn" prefWidth="150.0" text="Message" />
+                        <TableColumn fx:id="actionColumn" prefWidth="250.0" text="Actions" />
+                        <TableColumn fx:id="messageColumn" prefWidth="250.0" text="Message" />
                     </columns>
                   </TableView>
                </children></AnchorPane>
