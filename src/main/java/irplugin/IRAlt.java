@@ -27,6 +27,10 @@ public class IRAlt extends SelfContainedPluginAlt {
     private static final String EvalLocationElement = "EvaluationLocations";
     private List<EvaluationLocation> _evalLocs;
 
+    public List<EvaluationLocation> get_evalLocs() {
+        return _evalLocs;
+    }
+
     private ComputeOptions _computeOptions;
 
     public IRAlt() {
@@ -116,9 +120,9 @@ public boolean loadEvalLocs(Element ele, DataLocation dloc) {
     //                add them to the _evalLoc
 
     Element locationRoot = ele.getChild(EvalLocationElement);
-    List objLocations = locationRoot.getChildren(); //these are the "Location" elements
+    List objLocations = locationRoot.getChildren(); //these are the "EvaluationLocation" objects
     for (Object locObj : objLocations) {
-        Element eleLocation = (Element) locObj;
+        Element eleLocation = (Element) locObj;//convert them to Elements
         if (dloc.getName().equals(eleLocation.getAttributeValue("Name"))) {
             for (Object e : eleLocation.getChildren()) {
                 Element eleEvaluations = (Element) e;

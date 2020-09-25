@@ -58,9 +58,10 @@ public class IRMain extends AbstractSelfContainedPlugin<IRAlt> implements RtsPlu
     }
 
     @Override
-    public void editAlternative(IRAlt IRAlt) {
+    public void editAlternative(IRAlt irAlt) {
 //        UIMain.main(new String[]{});is to run UI main as is
-//        Below runs javaFX gui in a Jframe.
+
+//        Sees if an existing editor window is present and repaints it.
         Window[] windows = Window.getWindows();
         for (Window window : windows){
             if (window instanceof Frame){
@@ -71,6 +72,7 @@ public class IRMain extends AbstractSelfContainedPlugin<IRAlt> implements RtsPlu
                     return;
             }
             }
+            //        Below runs javaFX gui in a Jframe.
         }
         JFrame window = new JFrame();
         window.setTitle("Alternative Editor");
@@ -83,6 +85,8 @@ public class IRMain extends AbstractSelfContainedPlugin<IRAlt> implements RtsPlu
                 jfxPanel.setScene(new Scene(root, 950, 400));
                 // Give the controller access to the main app
                 Controller controller = loader.getController();
+                controller.set_irAlt(irAlt);
+                controller.initlocations();
 //                controller.setMainApp();
 
                 SwingUtilities.invokeLater(() -> {

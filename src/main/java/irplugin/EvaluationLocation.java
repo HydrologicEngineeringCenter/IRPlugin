@@ -19,6 +19,7 @@ public class EvaluationLocation {
     private String _actions;
     private DataLocation _location;
     private String _actionMessage;
+    private String _name;
 
     public Integer get_evalValue() {
         return _evalValue;
