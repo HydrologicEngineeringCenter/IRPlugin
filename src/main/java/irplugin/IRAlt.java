@@ -31,6 +31,18 @@ public class IRAlt extends SelfContainedPluginAlt {
         return _evalLocs;
     }
 
+    public void set_dataLocations(List<DataLocation> _dataLocations) {
+        this._dataLocations = _dataLocations;
+    }
+
+    public void set_evalLocs(List<EvaluationLocation> _evalLocs) {
+        this._evalLocs = _evalLocs;
+    }
+
+    public List<DataLocation> get_dataLocations() {
+        return _dataLocations;
+    }
+
     private ComputeOptions _computeOptions;
 
     public IRAlt() {

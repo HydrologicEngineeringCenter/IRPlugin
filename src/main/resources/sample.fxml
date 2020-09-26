@@ -13,7 +13,7 @@
           <Menu mnemonicParsing="false" text="File">
             <items>
                   <MenuItem mnemonicParsing="false" onAction="#newLocation" text="New Location" />
-                  <MenuItem mnemonicParsing="false" onAction="#close" text="Save" />
+                  <MenuItem mnemonicParsing="false" onAction="#saveLocations" text="Save" />
               <MenuItem mnemonicParsing="false" onAction="#close" text="Close" />
             </items>
           </Menu>

@@ -1,10 +1,11 @@
 package alteditor;
 
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class EditorEvalLocs {
     private SimpleStringProperty name;
-    private SimpleStringProperty value;
+    private SimpleIntegerProperty value;
     private SimpleStringProperty operator;
     private SimpleStringProperty actions;
     private SimpleStringProperty message;
@@ -19,12 +20,12 @@ public class EditorEvalLocs {
         this.name = new SimpleStringProperty(name);
     }
 
-    public String getValue() {
+    public Integer getValue() {
         return value.get();
     }
 
-    public void setValue(String value) {
-        this.value= new SimpleStringProperty(value);
+    public void setValue(Integer value) {
+        this.value= new SimpleIntegerProperty(value);
     }
 
     public String getOperator() {
@@ -53,7 +54,7 @@ public class EditorEvalLocs {
         this.message= new SimpleStringProperty(message);
     }
 
-    public EditorEvalLocs(String name, String value, String operator, String  action, String message){
+    public EditorEvalLocs(String name, Integer value, String operator, String  action, String message){
         setName(name);
         setValue(value);
         setOperator(operator);

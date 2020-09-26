@@ -1,5 +1,6 @@
 package alteditor;
 
+import hec2.model.DataLocation;
 import irplugin.EvaluationLocation;
 import irplugin.IRAlt;
 import javafx.collections.FXCollections;
@@ -12,6 +13,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.util.converter.IntegerStringConverter;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ Controller implements Initializable {
     @FXML
     private Label altLabel;
     @FXML
-    private TableColumn<EditorEvalLocs, String> valueColumn;
+    private TableColumn<EditorEvalLocs, Integer> valueColumn;
     @FXML
     private TableColumn<EditorEvalLocs, String> operatorColumn;
     @FXML
@@ -63,7 +65,7 @@ Controller implements Initializable {
         List<EvaluationLocation> locs = _irAlt.get_evalLocs();
         for (EvaluationLocation loc :locs){
             String name = loc.get_location().getName();
-            String val = loc.get_evalValue().toString();
+            Integer val = loc.get_evalValue();
             String operator = loc.get_operator();
             String action = loc.get_actions();
             String message = loc.get_actionMessage();
@@ -80,7 +82,7 @@ Controller implements Initializable {
         public void initialize (URL location, ResourceBundle resources){
             altLabel.setText("Alternative Name");
             nameColumn.setCellValueFactory(new PropertyValueFactory<EditorEvalLocs, String>("name"));
-            valueColumn.setCellValueFactory(new PropertyValueFactory<EditorEvalLocs, String>("value"));
+            valueColumn.setCellValueFactory(new PropertyValueFactory<EditorEvalLocs, Integer>("value"));
             operatorColumn.setCellValueFactory(new PropertyValueFactory<EditorEvalLocs, String>("operator"));
             actionColumn.setCellValueFactory(new PropertyValueFactory<EditorEvalLocs, String>("actions"));
             messageColumn.setCellValueFactory(new PropertyValueFactory<EditorEvalLocs, String>("message"));
@@ -88,14 +90,16 @@ Controller implements Initializable {
 //            tableView.setItems(_locations);
             tableView.setEditable(true);
 //Making the Columns Editable
-            ArrayList<TableColumn<EditorEvalLocs, String>> colList = new ArrayList<>();
-            colList.add(nameColumn);
-            colList.add(valueColumn);
-            colList.add(operatorColumn);
-            colList.add(actionColumn);
-            colList.add(messageColumn);
+            ArrayList<TableColumn<EditorEvalLocs, String>> stringcolList = new ArrayList<>();
+            stringcolList.add(nameColumn);
+            stringcolList.add(operatorColumn);
+            stringcolList.add(actionColumn);
+            stringcolList.add(messageColumn);
 
-            for (TableColumn<EditorEvalLocs, String> column : colList){
+            ArrayList<TableColumn<EditorEvalLocs, Integer>> intcolList = new ArrayList<>();
+                        intcolList.add(valueColumn);
+
+            for (TableColumn<EditorEvalLocs, String> column : stringcolList){
                 column.setCellFactory(TextFieldTableCell.forTableColumn());
                 column.setOnEditCommit(
                         new EventHandler<TableColumn.CellEditEvent<EditorEvalLocs, String>>() {
@@ -108,14 +112,52 @@ Controller implements Initializable {
                         }
                 );
             }
+            for (TableColumn<EditorEvalLocs, Integer> column : intcolList){
+                column.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+                column.setOnEditCommit(
+                        new EventHandler<TableColumn.CellEditEvent<EditorEvalLocs, Integer>>() {
+                            @Override
+                            public void handle(TableColumn.CellEditEvent<EditorEvalLocs, Integer> t) {
+                                ((EditorEvalLocs) t.getTableView().getItems().get(
+                                        t.getTablePosition().getRow())
+                                ).setValue(t.getNewValue());
+                            }
+                        }
+                );
+            }
         }
         public void newLocation () {
-            _locations.add(new EditorEvalLocs("SetThisValue", "SetThisValue", "SetThisValue", "SetThisValue", "SetThisValue"));
-
+            _locations.add(new EditorEvalLocs("SetThisValue", 0, "SetThisValue", "SetThisValue", "SetThisValue"));
 
         }
         public void close () {
             exit();
+
+        }
+
+        public void saveLocations (){
+        ArrayList<EvaluationLocation> newEvalLocs = new ArrayList<>();
+        ArrayList<DataLocation> newDls = new ArrayList<>();
+        for (EditorEvalLocs editorEvalLocs : _locations){
+            String name = editorEvalLocs.getName();
+            Integer val = editorEvalLocs.getValue();
+            String operator = editorEvalLocs.getOperator();
+            String action = editorEvalLocs.getActions();
+            String message = editorEvalLocs.getMessage();
+            DataLocation dloc = new DataLocation( _irAlt.getModelAlt(),name, "Any");
+            newDls.add(dloc);
+            newEvalLocs.add(new EvaluationLocation(dloc, val,operator,action,message));
+        }
+        _irAlt.set_evalLocs(newEvalLocs);
+//        List<DataLocation> altLocs = _irAlt.get_dataLocations();
+//        for (DataLocation dl : newDls){
+//            for (DataLocation altDl : altLocs){
+//                if (!dl.getName().equals(altDl.getName())){
+//                    altLocs.add(dl);
+//                }
+//            }
+//        }
+        _irAlt.saveData();
 
         }
     }
