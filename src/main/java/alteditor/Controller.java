@@ -89,43 +89,66 @@ Controller implements Initializable {
 //            initlocations();
 //            tableView.setItems(_locations);
             tableView.setEditable(true);
-//Making the Columns Editable
-            ArrayList<TableColumn<EditorEvalLocs, String>> stringcolList = new ArrayList<>();
-            stringcolList.add(nameColumn);
-            stringcolList.add(operatorColumn);
-            stringcolList.add(actionColumn);
-            stringcolList.add(messageColumn);
-
-            ArrayList<TableColumn<EditorEvalLocs, Integer>> intcolList = new ArrayList<>();
-                        intcolList.add(valueColumn);
-
-            for (TableColumn<EditorEvalLocs, String> column : stringcolList){
-                column.setCellFactory(TextFieldTableCell.forTableColumn());
-                column.setOnEditCommit(
-                        new EventHandler<TableColumn.CellEditEvent<EditorEvalLocs, String>>() {
-                            @Override
-                            public void handle(TableColumn.CellEditEvent<EditorEvalLocs, String> t) {
-                                ((EditorEvalLocs) t.getTableView().getItems().get(
-                                        t.getTablePosition().getRow())
-                                ).setName(t.getNewValue());
-                            }
+//Making the Columns Editabale
+//---------------------------------------------------------------------------------------------------------------------------
+            nameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+            nameColumn.setOnEditCommit(
+                    new EventHandler<TableColumn.CellEditEvent<EditorEvalLocs, String>>() {
+                        @Override
+                        public void handle(TableColumn.CellEditEvent<EditorEvalLocs, String> t) {
+                            ((EditorEvalLocs) t.getTableView().getItems().get(
+                                    t.getTablePosition().getRow())
+                            ).setName(t.getNewValue());
                         }
-                );
-            }
-            for (TableColumn<EditorEvalLocs, Integer> column : intcolList){
-                column.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-                column.setOnEditCommit(
-                        new EventHandler<TableColumn.CellEditEvent<EditorEvalLocs, Integer>>() {
-                            @Override
-                            public void handle(TableColumn.CellEditEvent<EditorEvalLocs, Integer> t) {
-                                ((EditorEvalLocs) t.getTableView().getItems().get(
-                                        t.getTablePosition().getRow())
-                                ).setValue(t.getNewValue());
-                            }
+                    }
+                    );
+
+            valueColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+            valueColumn.setOnEditCommit(
+                    new EventHandler<TableColumn.CellEditEvent<EditorEvalLocs, Integer>>() {
+                        @Override
+                        public void handle(TableColumn.CellEditEvent<EditorEvalLocs, Integer> t) {
+                            ((EditorEvalLocs) t.getTableView().getItems().get(
+                                    t.getTablePosition().getRow())
+                            ).setValue(t.getNewValue());
                         }
-                );
-            }
-        }
+                    }
+            );
+            operatorColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+            operatorColumn.setOnEditCommit(
+                    new EventHandler<TableColumn.CellEditEvent<EditorEvalLocs, String>>() {
+                        @Override
+                        public void handle(TableColumn.CellEditEvent<EditorEvalLocs, String> t) {
+                            ((EditorEvalLocs) t.getTableView().getItems().get(
+                                    t.getTablePosition().getRow())
+                            ).setOperator(t.getNewValue());
+                        }
+                    }
+            );
+            actionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+            actionColumn.setOnEditCommit(
+                    new EventHandler<TableColumn.CellEditEvent<EditorEvalLocs, String>>() {
+                        @Override
+                        public void handle(TableColumn.CellEditEvent<EditorEvalLocs, String> t) {
+                            ((EditorEvalLocs) t.getTableView().getItems().get(
+                                    t.getTablePosition().getRow())
+                            ).setActions(t.getNewValue());
+                        }
+                    }
+            );
+            messageColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+            messageColumn.setOnEditCommit(
+                    new EventHandler<TableColumn.CellEditEvent<EditorEvalLocs, String>>() {
+                        @Override
+                        public void handle(TableColumn.CellEditEvent<EditorEvalLocs, String> t) {
+                            ((EditorEvalLocs) t.getTableView().getItems().get(
+                                    t.getTablePosition().getRow())
+                            ).setMessage(t.getNewValue());
+                        }
+                    }
+            );
+//---------------------------------------------------------------------------------------------------------------------------
+    }
         public void newLocation () {
             _locations.add(new EditorEvalLocs("SetThisValue", 0, "SetThisValue", "SetThisValue", "SetThisValue"));
 
@@ -157,7 +180,7 @@ Controller implements Initializable {
 //                }
 //            }
 //        }
-        _irAlt.saveData();
+//        _irAlt.saveData();
 
         }
     }
