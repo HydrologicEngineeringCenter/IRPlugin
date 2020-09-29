@@ -70,8 +70,6 @@ public class IRAlt extends SelfContainedPluginAlt {
                     Element locationElement = new Element("Location");
                     locationElement.setAttribute("Name", dl.getName());
                     locationElement.setAttribute("Parameter", dl.getParameter());
-//                    Testing to add a new evalLoc
-//                    _evalLocs.add(new EvaluationLocation(dl,15,"GreaterThan","ShowMessage","GET IN THE ARK!!!"));
                     for(EvaluationLocation el : _evalLocs){
                         //add to the element.
                         if(el.get_location().getName().equals(dl.getName())){
@@ -169,7 +167,7 @@ public boolean loadEvalLocs(Element ele, DataLocation dloc) {
             DSSIdentifier forecastDSSId = new DSSIdentifier(dssFilePath, dsspathname);
             forecastDSSId.setStartTime(startTime);
             forecastDSSId.setEndTime(endTime);
-            addComputeWarningMessage("-------------------------------------------");
+            addComputeWarningMessage("----------------------------------------------------------------");
             addComputeMessage("Computing Evalutaion Location Number "+ i + el.get_location().getName());
             addComputeMessage("Reading " + dsspathname + " from " + dssFilePath+ System.lineSeparator());
 
@@ -208,11 +206,11 @@ public boolean loadEvalLocs(Element ele, DataLocation dloc) {
                 String dlparts = dl.getDssPath();
                 DSSPathname p = new DSSPathname(dlparts);
 //                I believe this if block is only initiated for output locations.
-                if (p.aPart().equals("") && p.bPart().equals("") && p.cPart().equals("") && p.dPart().equals("") && p.ePart().equals("") && p.fPart().equals("")) {
-                    if (validLinkedToDssPath(dl)) {
-//                        setDssParts(dl);
-                    }
-                }
+//                if (p.aPart().equals("") && p.bPart().equals("") && p.cPart().equals("") && p.dPart().equals("") && p.ePart().equals("") && p.fPart().equals("")) {
+//                    if (validLinkedToDssPath(dl)) {
+////                        setDssParts(dl);
+//                    }
+//                }
             }
             return _dataLocations;
         }
@@ -248,7 +246,6 @@ public boolean loadEvalLocs(Element ele, DataLocation dloc) {
                 String dssPath = linkedTo.getDssPath();
                 if (validLinkedToDssPath(dl)) {
                     setModified(true);
-//                    setDssParts(dl);
                     _dataLocations.set(i, dl);
                     retval = true;
                 }
@@ -257,7 +254,6 @@ public boolean loadEvalLocs(Element ele, DataLocation dloc) {
                 String dssPath = linkedTo.getDssPath();
                 if (validLinkedToDssPath(dl)) {
                     setModified(true);
-//                    setDssParts(dl);
                     retval = true;
                 }
             }

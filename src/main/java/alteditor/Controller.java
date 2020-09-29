@@ -1,6 +1,8 @@
 package alteditor;
 
+import com.rma.examples.ensemble.Compute;
 import hec2.model.DataLocation;
+import hec2.model.DataLocationComputeType;
 import irplugin.EvaluationLocation;
 import irplugin.IRAlt;
 import javafx.collections.FXCollections;
@@ -17,6 +19,7 @@ import javafx.util.converter.IntegerStringConverter;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -63,18 +66,23 @@ Controller implements Initializable {
 //        locations.add(new EditorEvalLocs("Healdsburg", "15", "GreaterThan", "ShowDialog", "Campground Evacuation"));
 //        locations.add(new EditorEvalLocs("Feliz Ck", "25", "GreaterThan", "ShowMessage", "Levee Overtopping"));
         List<EvaluationLocation> locs = _irAlt.get_evalLocs();
-        for (EvaluationLocation loc :locs){
-            String name = loc.get_location().getName();
-            Integer val = loc.get_evalValue();
-            String operator = loc.get_operator();
-            String action = loc.get_actions();
-            String message = loc.get_actionMessage();
-            locations.add(new EditorEvalLocs(name, val, operator, action,message));
+        if (locs!=null){
+            for (EvaluationLocation loc :locs){
+                String name = loc.get_location().getName();
+                Integer val = loc.get_evalValue();
+                String operator = loc.get_operator();
+                String action = loc.get_actions();
+                String message = loc.get_actionMessage();
+                locations.add(new EditorEvalLocs(name, val, operator, action,message));
+            }
+            this._locations = locations;
+            tableView.setItems(_locations);
         }
-
-        this._locations = locations;
-        tableView.setItems(_locations);
-
+        else{
+            this._locations = locations;
+            newLocation();
+            tableView.setItems(_locations);
+        }
     }
 
 
@@ -168,19 +176,31 @@ Controller implements Initializable {
             String action = editorEvalLocs.getActions();
             String message = editorEvalLocs.getMessage();
             DataLocation dloc = new DataLocation( _irAlt.getModelAlt(),name, "Any");
+            dloc.setComputeType(DataLocationComputeType.Computed);
             newDls.add(dloc);
             newEvalLocs.add(new EvaluationLocation(dloc, val,operator,action,message));
         }
         _irAlt.set_evalLocs(newEvalLocs);
-//        List<DataLocation> altLocs = _irAlt.get_dataLocations();
-//        for (DataLocation dl : newDls){
-//            for (DataLocation altDl : altLocs){
-//                if (!dl.getName().equals(altDl.getName())){
-//                    altLocs.add(dl);
-//                }
-//            }
-//        }
-//        _irAlt.saveData();
+        List<DataLocation> altDLocs = _irAlt.get_dataLocations();
+        if (altDLocs.size()>0) {
+            List<String> Dlnames = new ArrayList<>();
+            for (DataLocation altDl : altDLocs) {
+                Dlnames.add(altDl.getName());
+            }
+            for (EvaluationLocation e : newEvalLocs) {
+                for (String dlname : Dlnames) {
+                    if (!(e.get_location().getName().equals(dlname))) {
+                        altDLocs.add(e.get_location());
+                    }
+                }
+            }
+        }
+        else {
+            for (DataLocation newdl : newDls) {
+                altDLocs.add(newdl);
+            }
+        }
+        _irAlt.saveData();
 
         }
     }
