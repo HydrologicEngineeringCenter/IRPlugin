@@ -1,6 +1,5 @@
 package alteditor;
 
-import com.rma.examples.ensemble.Compute;
 import hec2.model.DataLocation;
 import hec2.model.DataLocationComputeType;
 import irplugin.EvaluationLocation;
@@ -19,9 +18,9 @@ import javafx.util.converter.IntegerStringConverter;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import static javafx.application.Platform.exit;
 
@@ -45,10 +44,6 @@ Controller implements Initializable {
 
     private ObservableList<EditorEvalLocs> _locations;
 
-    public ObservableList<EditorEvalLocs> get_locations() {
-        return _locations;
-    }
-
     private IRAlt _irAlt;
 
     public void set_irAlt(IRAlt _irAlt) {
@@ -56,133 +51,130 @@ Controller implements Initializable {
     }
 
 
-
-
-
-    public  void initlocations() {
+    public void initlocations() {
 //        simulatiing initilizing locations
         ObservableList<EditorEvalLocs> locations = FXCollections.observableArrayList();
-//        locations.add(new EditorEvalLocs("Healdsburg", "10", "GreaterThan", "ShowDialog", "Bridge needs to be closed."));
-//        locations.add(new EditorEvalLocs("Healdsburg", "15", "GreaterThan", "ShowDialog", "Campground Evacuation"));
-//        locations.add(new EditorEvalLocs("Feliz Ck", "25", "GreaterThan", "ShowMessage", "Levee Overtopping"));
         List<EvaluationLocation> locs = _irAlt.get_evalLocs();
-        if (locs!=null){
-            for (EvaluationLocation loc :locs){
+        if (locs != null) {
+            for (EvaluationLocation loc : locs) {
                 String name = loc.get_location().getName();
                 Integer val = loc.get_evalValue();
                 String operator = loc.get_operator();
                 String action = loc.get_actions();
                 String message = loc.get_actionMessage();
-                locations.add(new EditorEvalLocs(name, val, operator, action,message));
+                locations.add(new EditorEvalLocs(name, val, operator, action, message));
             }
             this._locations = locations;
-            tableView.setItems(_locations);
-        }
-        else{
+        } else {
             this._locations = locations;
             newLocation();
-            tableView.setItems(_locations);
         }
+        tableView.setItems(_locations);
     }
 
 
-        @Override
-        public void initialize (URL location, ResourceBundle resources){
-            altLabel.setText("Alternative Name");
-            nameColumn.setCellValueFactory(new PropertyValueFactory<EditorEvalLocs, String>("name"));
-            valueColumn.setCellValueFactory(new PropertyValueFactory<EditorEvalLocs, Integer>("value"));
-            operatorColumn.setCellValueFactory(new PropertyValueFactory<EditorEvalLocs, String>("operator"));
-            actionColumn.setCellValueFactory(new PropertyValueFactory<EditorEvalLocs, String>("actions"));
-            messageColumn.setCellValueFactory(new PropertyValueFactory<EditorEvalLocs, String>("message"));
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        altLabel.setText("Alternative Name");
+        nameColumn.setCellValueFactory(new PropertyValueFactory<EditorEvalLocs, String>("name"));
+        valueColumn.setCellValueFactory(new PropertyValueFactory<EditorEvalLocs, Integer>("value"));
+        operatorColumn.setCellValueFactory(new PropertyValueFactory<EditorEvalLocs, String>("operator"));
+        actionColumn.setCellValueFactory(new PropertyValueFactory<EditorEvalLocs, String>("actions"));
+        messageColumn.setCellValueFactory(new PropertyValueFactory<EditorEvalLocs, String>("message"));
 //            initlocations();
 //            tableView.setItems(_locations);
-            tableView.setEditable(true);
-//Making the Columns Editabale
+        tableView.setEditable(true);
+//Making the Columns Editable
 //---------------------------------------------------------------------------------------------------------------------------
-            nameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-            nameColumn.setOnEditCommit(
-                    new EventHandler<TableColumn.CellEditEvent<EditorEvalLocs, String>>() {
-                        @Override
-                        public void handle(TableColumn.CellEditEvent<EditorEvalLocs, String> t) {
-                            ((EditorEvalLocs) t.getTableView().getItems().get(
-                                    t.getTablePosition().getRow())
-                            ).setName(t.getNewValue());
-                        }
+        nameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        nameColumn.setOnEditCommit(
+                new EventHandler<TableColumn.CellEditEvent<EditorEvalLocs, String>>() {
+                    @Override
+                    public void handle(TableColumn.CellEditEvent<EditorEvalLocs, String> t) {
+                        (t.getTableView().getItems().get(
+                                t.getTablePosition().getRow())
+                        ).setName(t.getNewValue());
                     }
-                    );
+                }
+        );
 
-            valueColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-            valueColumn.setOnEditCommit(
-                    new EventHandler<TableColumn.CellEditEvent<EditorEvalLocs, Integer>>() {
-                        @Override
-                        public void handle(TableColumn.CellEditEvent<EditorEvalLocs, Integer> t) {
-                            ((EditorEvalLocs) t.getTableView().getItems().get(
-                                    t.getTablePosition().getRow())
-                            ).setValue(t.getNewValue());
-                        }
+        valueColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+        valueColumn.setOnEditCommit(
+                new EventHandler<TableColumn.CellEditEvent<EditorEvalLocs, Integer>>() {
+                    @Override
+                    public void handle(TableColumn.CellEditEvent<EditorEvalLocs, Integer> t) {
+                        (t.getTableView().getItems().get(
+                                t.getTablePosition().getRow())
+                        ).setValue(t.getNewValue());
                     }
-            );
-            operatorColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-            operatorColumn.setOnEditCommit(
-                    new EventHandler<TableColumn.CellEditEvent<EditorEvalLocs, String>>() {
-                        @Override
-                        public void handle(TableColumn.CellEditEvent<EditorEvalLocs, String> t) {
-                            ((EditorEvalLocs) t.getTableView().getItems().get(
-                                    t.getTablePosition().getRow())
-                            ).setOperator(t.getNewValue());
-                        }
+                }
+        );
+        operatorColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        operatorColumn.setOnEditCommit(
+                new EventHandler<TableColumn.CellEditEvent<EditorEvalLocs, String>>() {
+                    @Override
+                    public void handle(TableColumn.CellEditEvent<EditorEvalLocs, String> t) {
+                        (t.getTableView().getItems().get(
+                                t.getTablePosition().getRow())
+                        ).setOperator(t.getNewValue());
                     }
-            );
-            actionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-            actionColumn.setOnEditCommit(
-                    new EventHandler<TableColumn.CellEditEvent<EditorEvalLocs, String>>() {
-                        @Override
-                        public void handle(TableColumn.CellEditEvent<EditorEvalLocs, String> t) {
-                            ((EditorEvalLocs) t.getTableView().getItems().get(
-                                    t.getTablePosition().getRow())
-                            ).setActions(t.getNewValue());
-                        }
+                }
+        );
+        actionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        actionColumn.setOnEditCommit(
+                new EventHandler<TableColumn.CellEditEvent<EditorEvalLocs, String>>() {
+                    @Override
+                    public void handle(TableColumn.CellEditEvent<EditorEvalLocs, String> t) {
+                        (t.getTableView().getItems().get(
+                                t.getTablePosition().getRow())
+                        ).setActions(t.getNewValue());
                     }
-            );
-            messageColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-            messageColumn.setOnEditCommit(
-                    new EventHandler<TableColumn.CellEditEvent<EditorEvalLocs, String>>() {
-                        @Override
-                        public void handle(TableColumn.CellEditEvent<EditorEvalLocs, String> t) {
-                            ((EditorEvalLocs) t.getTableView().getItems().get(
-                                    t.getTablePosition().getRow())
-                            ).setMessage(t.getNewValue());
-                        }
+                }
+        );
+        messageColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        messageColumn.setOnEditCommit(
+                new EventHandler<TableColumn.CellEditEvent<EditorEvalLocs, String>>() {
+                    @Override
+                    public void handle(TableColumn.CellEditEvent<EditorEvalLocs, String> t) {
+                        (t.getTableView().getItems().get(
+                                t.getTablePosition().getRow())
+                        ).setMessage(t.getNewValue());
                     }
-            );
+                }
+        );
 //---------------------------------------------------------------------------------------------------------------------------
     }
-        public void newLocation () {
-            _locations.add(new EditorEvalLocs("SetThisValue", 0, "SetThisValue", "SetThisValue", "SetThisValue"));
 
-        }
-        public void close () {
-            exit();
+    public void newLocation() {
+        _locations.add(new EditorEvalLocs("SetThisValue", 0, "SetThisValue", "SetThisValue", "SetThisValue"));
 
-        }
+    }
 
-        public void saveLocations (){
+    public void close() {
+        exit();
+
+    }
+
+    public void saveLocations() {
         ArrayList<EvaluationLocation> newEvalLocs = new ArrayList<>();
         ArrayList<DataLocation> newDls = new ArrayList<>();
-        for (EditorEvalLocs editorEvalLocs : _locations){
+//        Creating Evaluation Locations from Editor Eval Locs
+        for (EditorEvalLocs editorEvalLocs : _locations) {
             String name = editorEvalLocs.getName();
             Integer val = editorEvalLocs.getValue();
             String operator = editorEvalLocs.getOperator();
             String action = editorEvalLocs.getActions();
             String message = editorEvalLocs.getMessage();
-            DataLocation dloc = new DataLocation( _irAlt.getModelAlt(),name, "Any");
+            DataLocation dloc = new DataLocation(_irAlt.getModelAlt(), name, "Any");
             dloc.setComputeType(DataLocationComputeType.Computed);
             newDls.add(dloc);
-            newEvalLocs.add(new EvaluationLocation(dloc, val,operator,action,message));
+            newEvalLocs.add(new EvaluationLocation(dloc, val, operator, action, message));
         }
+//        Setting evaluation Locations and Data Locations to the IRalt.
         _irAlt.set_evalLocs(newEvalLocs);
         List<DataLocation> altDLocs = _irAlt.get_dataLocations();
-        if (altDLocs.size()>0) {
+//        If there are existing data locations, check names and don't add duplicates.
+        if (altDLocs.size() > 0) {
             List<String> Dlnames = new ArrayList<>();
             for (DataLocation altDl : altDLocs) {
                 Dlnames.add(altDl.getName());
@@ -195,12 +187,15 @@ Controller implements Initializable {
                 }
             }
         }
+//        If there are no Data Locations yet, (new alt) add all the Data Locations. Use distinct to avoid duplication.
         else {
-            for (DataLocation newdl : newDls) {
-                altDLocs.add(newdl);
-            }
+            List<DataLocation> distinctElements = newDls.stream()
+                    .distinct()
+                    .collect(Collectors.toList());
+            altDLocs.addAll(distinctElements);
         }
-        _irAlt.saveData();
+            _irAlt.saveData();
 
         }
     }
+
