@@ -26,7 +26,7 @@
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="28.0" prefWidth="757.0" style="-fx-background-color: #ffffff;">
                <children>
-                  <Label fx:id="altLabel" alignment="BOTTOM_CENTER" contentDisplay="CENTER" layoutX="66.0" layoutY="20.0" prefHeight="32.0" prefWidth="756.8" text="ALTERNATIVE NAME HERE" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <Label fx:id="altLabel" alignment="BOTTOM_CENTER" contentDisplay="CENTER" layoutX="66.0" layoutY="20.0" prefHeight="32.0" prefWidth="756.8" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <font>
                         <Font name="System Italic" size="18.0" />
                      </font>
@@ -36,11 +36,11 @@
                <children>
                   <TableView fx:id="tableView" layoutX="135.0" layoutY="-19.0" prefHeight="311.2" prefWidth="757.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <columns>
-                      <TableColumn fx:id="nameColumn" prefWidth="150.0" text="Location Name" />
-                      <TableColumn fx:id="valueColumn" prefWidth="150.0" text="Threhold Value" />
-                        <TableColumn fx:id="operatorColumn" prefWidth="150.0" text="Operator" />
-                        <TableColumn fx:id="actionColumn" prefWidth="250.0" text="Actions" />
-                        <TableColumn fx:id="messageColumn" prefWidth="250.0" text="Message" />
+                      <TableColumn fx:id="nameColumn" prefWidth="150.0" />
+                      <TableColumn fx:id="valueColumn" prefWidth="150.0" />
+                        <TableColumn fx:id="operatorColumn" prefWidth="150.0" />
+                        <TableColumn fx:id="actionColumn" prefWidth="250.0" />
+                        <TableColumn fx:id="messageColumn" prefWidth="250.0" />
                     </columns>
                   </TableView>
                </children></AnchorPane>

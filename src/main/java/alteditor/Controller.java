@@ -12,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.IntegerStringConverter;
@@ -69,18 +70,34 @@ Controller implements Initializable {
             this._locations = locations;
             newLocation();
         }
+        altLabel.setText(_irAlt.getName());
         tableView.setItems(_locations);
     }
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        altLabel.setText("Alternative Name");
+        altLabel.setText("");
         nameColumn.setCellValueFactory(new PropertyValueFactory<EditorEvalLocs, String>("name"));
+        Label l = new Label("Location Name");
+        l.setTooltip(new Tooltip("Name of the Data Location"));
+        nameColumn.setGraphic(l);
         valueColumn.setCellValueFactory(new PropertyValueFactory<EditorEvalLocs, Integer>("value"));
+        Label v = new Label("Threshold Value");
+        v.setTooltip(new Tooltip("Integer value to trigger action"));
+        valueColumn.setGraphic(v);
         operatorColumn.setCellValueFactory(new PropertyValueFactory<EditorEvalLocs, String>("operator"));
+        Label o = new Label("Operator");
+        o.setTooltip(new Tooltip("Currently is not used\n In future will be either: 'GreaterThan' or 'LessThan'" ));
+        operatorColumn.setGraphic(o);
         actionColumn.setCellValueFactory(new PropertyValueFactory<EditorEvalLocs, String>("actions"));
+        Label a = new Label("Action");
+        a.setTooltip(new Tooltip("Action performed when condition is met\n Current Options: 'ShowMessage' or 'ShowDialog'" ));
+        actionColumn.setGraphic(a);
         messageColumn.setCellValueFactory(new PropertyValueFactory<EditorEvalLocs, String>("message"));
+        Label m = new Label("Message");
+        m.setTooltip(new Tooltip("Message displayed when condition is met" ));
+        messageColumn.setGraphic(m);
 //            initlocations();
 //            tableView.setItems(_locations);
         tableView.setEditable(true);
@@ -146,7 +163,7 @@ Controller implements Initializable {
     }
 
     public void newLocation() {
-        _locations.add(new EditorEvalLocs("SetThisValue", 0, "SetThisValue", "SetThisValue", "SetThisValue"));
+        _locations.add(new EditorEvalLocs("SetThisValue", 0, "GreaterThan", "ShowMessage,ShowDialog", "SetThisValue"));
 
     }
 
