@@ -82,24 +82,27 @@ Controller implements Initializable {
         Label l = new Label("Location Name");
         l.setTooltip(new Tooltip("Name of the Data Location"));
         nameColumn.setGraphic(l);
+
         valueColumn.setCellValueFactory(new PropertyValueFactory<EditorEvalLocs, Integer>("value"));
         Label v = new Label("Threshold Value");
         v.setTooltip(new Tooltip("Integer value to trigger action"));
         valueColumn.setGraphic(v);
+
         operatorColumn.setCellValueFactory(new PropertyValueFactory<EditorEvalLocs, String>("operator"));
         Label o = new Label("Operator");
         o.setTooltip(new Tooltip("Currently is not used\n In future will be either: 'GreaterThan' or 'LessThan'" ));
         operatorColumn.setGraphic(o);
+
         actionColumn.setCellValueFactory(new PropertyValueFactory<EditorEvalLocs, String>("actions"));
         Label a = new Label("Action");
         a.setTooltip(new Tooltip("Action performed when condition is met\n Current Options: 'ShowMessage' or 'ShowDialog'" ));
         actionColumn.setGraphic(a);
+
         messageColumn.setCellValueFactory(new PropertyValueFactory<EditorEvalLocs, String>("message"));
         Label m = new Label("Message");
         m.setTooltip(new Tooltip("Message displayed when condition is met" ));
         messageColumn.setGraphic(m);
-//            initlocations();
-//            tableView.setItems(_locations);
+
         tableView.setEditable(true);
 //Making the Columns Editable
 //---------------------------------------------------------------------------------------------------------------------------
@@ -175,7 +178,7 @@ Controller implements Initializable {
     public void saveLocations() {
         ArrayList<EvaluationLocation> newEvalLocs = new ArrayList<>();
         ArrayList<DataLocation> newDls = new ArrayList<>();
-//        Creating Evaluation Locations from Editor Eval Locs
+//        Creating Evaluation Locations from EditorEvalLocs
         for (EditorEvalLocs editorEvalLocs : _locations) {
             String name = editorEvalLocs.getName();
             Integer val = editorEvalLocs.getValue();
