@@ -1,6 +1,7 @@
 package irplugin;
 
 import com.rma.io.RmaFile;
+import hec.client.Report;
 import hec.heclib.util.HecTime;
 import hec.io.DSSIdentifier;
 import hec2.model.DataLocation;
@@ -9,6 +10,7 @@ import hec2.plugin.selfcontained.SelfContainedPluginAlt;
 import org.jdom.Document;
 import org.jdom.Element;
 import hec.heclib.dss.DSSPathname;
+import reports.IRReport;
 
 
 import java.util.ArrayList;
@@ -168,10 +170,15 @@ public boolean loadEvalLocs(Element ele, DataLocation dloc) {
             addComputeMessage("Reading " + dsspathname + " from " + dssFilePath+ System.lineSeparator());
 
             CompResult results = el.compute(forecastDSSId);
-            for (String messages:results.computeMessages) {
+            IRReport report = new IRReport.ReportBuilder()
+                    .compMessages(results)
+                    .errorMessages(results)
+                    .filepath(cco.getRunDirectory())
+                    .build();
+            for (String messages:results.getComputeMessages()) {
                 addComputeMessage(messages);
             }
-            for (String emessages:results.errorMessages){
+            for (String emessages:results.getErrorMessages()){
                 addComputeErrorMessage(emessages);
 
             }

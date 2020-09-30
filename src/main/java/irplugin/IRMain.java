@@ -1,6 +1,7 @@
 package irplugin;
 
 import alteditor.Controller;
+import com.rma.client.Browser;
 import com.rma.factories.NewObjectFactory;
 import com.rma.io.RmaFile;
 import hec2.map.GraphicElement;
@@ -14,9 +15,11 @@ import hec2.plugin.lang.OutputException;
 import hec2.plugin.model.ComputeOptions;
 import hec2.plugin.model.ModelAlternative;
 import hec2.plugin.selfcontained.AbstractSelfContainedPlugin;
+import hec2.rts.client.RmiTextFileReaderJDialog;
 import hec2.rts.plugin.RtsPlugin;
 import hec2.rts.plugin.RtsPluginManager;
 import hec2.rts.plugin.action.ComputeModelAction;
+import hec2.rts.plugin.action.OutputElementImpl;
 import hec2.rts.ui.RtsTabType;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
@@ -30,6 +33,7 @@ import com.rma.io.FileManagerImpl;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -185,7 +189,12 @@ public class IRMain extends AbstractSelfContainedPlugin<IRAlt> implements RtsPlu
 
     @Override
     public List<OutputElement> getOutputReports(ModelAlternative ma) {
-        return null;
+        List<OutputElement> actions = new ArrayList<OutputElement>();
+        String actCmd = "showReport";
+        OutputElementImpl out = new OutputElementImpl("Report", PluginName, actCmd);
+        actions.add(out);
+
+        return actions;
     }
 
     @Override
@@ -195,8 +204,45 @@ public class IRMain extends AbstractSelfContainedPlugin<IRAlt> implements RtsPlu
 
     @Override
     public boolean displayOutput(OutputElement outputElement, List<ModelAlternative> list) throws OutputException {
-        return false;
-    }
+        ModelAlternative ma = outputElement.getModelAlternative();
+        if (outputElement.getCommand()=="showReport"){
+            String rundir = ma.getComputeOptions().getRunDirectory();
+            String filename = rundir + RMAIO.separator + "IRreport.rpt";
+            File file =  new File(filename);
+            String input = "";
+            BufferedReader reader = null;
+            try {
+                reader = new BufferedReader(new FileReader(file));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            String line = null;
+            while (true) {
+                try {
+                    if (!((line = reader.readLine()) != null)) break;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                input += line + "\n";
+            }
+            try {
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            JTextArea textArea = new JTextArea(input);
+            JScrollPane scrollPane = new JScrollPane(textArea);
+            textArea.setLineWrap(true);
+            textArea.setWrapStyleWord(true);
+
+            scrollPane.setPreferredSize( new Dimension( 400, 400 )) ;
+            JOptionPane.showMessageDialog(Browser.getBrowserFrame(),  scrollPane, "Impact Response Report",
+                    JOptionPane.PLAIN_MESSAGE);
+        }
+        return true;
+}
 
     @Override
     public List<EditAction> getEditActions(ModelAlternative ma) {
@@ -289,4 +335,5 @@ public class IRMain extends AbstractSelfContainedPlugin<IRAlt> implements RtsPlu
         return simAlt;
 
     }
+
 }
