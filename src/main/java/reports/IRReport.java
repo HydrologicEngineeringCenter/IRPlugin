@@ -1,6 +1,8 @@
 package reports;
 
+import com.rma.io.RmaFile;
 import irplugin.CompResult;
+import rma.util.RMAFile;
 import rma.util.RMAIO;
 
 import java.io.BufferedWriter;
@@ -21,7 +23,7 @@ private void writeReport(){
     try {
         File file = new File(reportPath);
         file.mkdirs();
-        String filename = reportPath + RMAIO.separator + "IRreport.rpt";
+        String filename = reportPath.concat(RmaFile.separator).concat( "IRreport.rpt");
         System.out.println("showReport: report file is " + filename);
         _report = new BufferedWriter(new FileWriter(filename,false));
         for (String messages: compMessages){

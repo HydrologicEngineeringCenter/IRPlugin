@@ -104,7 +104,6 @@ public class EvaluationLocation {
                         + "ACTION MESSAGE: " + get_actionMessage() + "\n"
                         + "EVALUATION LOCATION: " + this.get_location().getName() + "\n"
                         + "MODEL ALTERNATIVE: " + this.get_location().getModelToLinkTo() + "\n");
-//                label.setHorizontalAlignment(SwingConstants.CENTER);
                 JOptionPane.showMessageDialog(Browser.getBrowserFrame(), label, "IR Message", JOptionPane.INFORMATION_MESSAGE);
             } else {
                 errorMessages.add("'" + act + "'" + " is not a valid action");

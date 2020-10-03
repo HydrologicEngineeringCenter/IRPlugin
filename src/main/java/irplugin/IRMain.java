@@ -47,6 +47,10 @@ public class IRMain extends AbstractSelfContainedPlugin<IRAlt> implements RtsPlu
     //    the extension for plugin files (like the alternative)
     private static final String _pluginExtension = ".irp";
 
+    public static String get_pluginSubDirectory() {
+        return _pluginSubDirectory;
+    }
+
     public static void main(String[] args) {
 
         IRMain p = new IRMain();
@@ -207,7 +211,8 @@ public class IRMain extends AbstractSelfContainedPlugin<IRAlt> implements RtsPlu
         ModelAlternative ma = outputElement.getModelAlternative();
         if (outputElement.getCommand()=="showReport"){
             String rundir = ma.getComputeOptions().getRunDirectory();
-            String filename = rundir + RMAIO.separator + "IRreport.rpt";
+            String plugdir = rundir.concat(getPluginDirectory());
+            String filename = plugdir.concat(RmaFile.separator).concat("IRreport.rpt");
             File file =  new File(filename);
             String input = "";
             BufferedReader reader = null;

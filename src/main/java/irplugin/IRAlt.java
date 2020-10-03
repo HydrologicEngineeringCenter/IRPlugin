@@ -170,10 +170,13 @@ public boolean loadEvalLocs(Element ele, DataLocation dloc) {
             addComputeMessage("Reading " + dsspathname + " from " + dssFilePath+ System.lineSeparator());
 
             CompResult results = el.compute(forecastDSSId);
+            String rundir = cco.getRunDirectory();
+            String plugdir = rundir.concat(RmaFile.separator).concat(IRMain.get_pluginSubDirectory());
+            String filename = plugdir.concat(RmaFile.separator).concat("IRreport.rpt");
             IRReport report = new IRReport.ReportBuilder()
                     .compMessages(results)
                     .errorMessages(results)
-                    .filepath(cco.getRunDirectory())
+                    .filepath(plugdir)
                     .build();
             for (String messages:results.getComputeMessages()) {
                 addComputeMessage(messages);
