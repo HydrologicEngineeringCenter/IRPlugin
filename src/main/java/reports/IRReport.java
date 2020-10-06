@@ -1,11 +1,15 @@
 package reports;
 
 import com.rma.io.RmaFile;
+import hec2.plugin.model.ComputeOptions;
 import irplugin.CompResult;
+import irplugin.IRMain;
 import rma.util.RMAFile;
 import rma.util.RMAIO;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Time;
 import java.util.List;
 
@@ -17,8 +21,8 @@ public class IRReport {
 
 IRReport(){
 }
-private void writeReport(){
-    try {
+    private void writeReport(){
+        try {
         System.out.println("writeReport: report file is " + reportPath);
         _report = new BufferedWriter(new FileWriter(reportPath,false));
         for (String messages: compMessages){
@@ -30,37 +34,21 @@ private void writeReport(){
         }
         _report.close();
         }
-    catch ( java.io.IOException ioe)
+        catch ( java.io.IOException ioe)
         {
             _report = null;
         }
     }
+
     public static String readReport(String filename){
-        File file =  new File(filename);
-
-        String input = "";
-        BufferedReader reader = null;
+        String data = "";
         try {
-            reader = new BufferedReader(new FileReader(file));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        String line = null;
-        while (true) {
-            try {
-                if (!((line = reader.readLine()) != null)) break;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            input += line + "\n";
-        }
-        try {
-            reader.close();
+            data = new String(Files.readAllBytes(Paths.get(filename)));
         } catch (IOException e) {
             e.printStackTrace();
+            return data;
         }
-        return input;
+        return data;
     }
 public static class ReportBuilder{
     private List<String> errorMessages;
@@ -88,7 +76,12 @@ public static class ReportBuilder{
         report.reportPath = this.reportPath;
         report.writeReport();
         return report;
-
+    }
+    public static String getReportFilename(ComputeOptions cco, String altName){
+        String rundir = cco.getRunDirectory();
+        String plugdir = RMAIO.concatPath(rundir, IRMain.get_pluginSubDirectory());
+        String filename = RMAIO.concatPath(plugdir,altName+".rpt");
+        return filename;
     }
 
 

@@ -11,6 +11,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import hec.heclib.dss.DSSPathname;
 import reports.IRReport;
+import rma.util.RMAIO;
 
 
 import java.util.ArrayList;
@@ -169,7 +170,7 @@ public boolean loadEvalLocs(Element ele, DataLocation dloc) {
             addComputeMessage("Computing Evalutaion Location Number "+ i +" "+ el.get_location().getName());
             addComputeMessage("Reading " + dsspathname + " from " + dssFilePath+ System.lineSeparator());
             CompResult results = el.compute(forecastDSSId);
-            String filename = getReportFilename(cco, getName());
+            String filename = IRReport.ReportBuilder.getReportFilename(cco, getName());
             IRReport report = new IRReport.ReportBuilder()
                     .compMessages(results)
                     .errorMessages(results)
@@ -185,14 +186,6 @@ public boolean loadEvalLocs(Element ele, DataLocation dloc) {
         }
         return returnValue;
     }
-public static String getReportFilename(ComputeOptions cco, String altName){
-    String rundir = cco.getRunDirectory();
-    String plugdir = rundir.concat(RmaFile.separator).concat(IRMain.get_pluginSubDirectory());
-    String filename = plugdir.concat(RmaFile.separator).concat(altName).concat(".rpt");
-    return filename;
-
-
-}
 
     @Override
     public int getModelCount() {

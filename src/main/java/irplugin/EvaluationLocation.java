@@ -93,7 +93,7 @@ public class EvaluationLocation {
             if (act.compareToIgnoreCase("ShowMessage") == 0) {
                 compMessages.add("---------  Threshold value was exceeded--------- \n"
                         + "THRESHOLD VALUE: " + _evalValue + "\n"
-                        + "TIME OF EXCEEDANCE:" + firstpair.getKey() + "\n"
+                        + "TIME OF EXCEEDANCE: " + firstpair.getKey() + "\n"
                         + "ACTION MESSAGE: " + get_actionMessage() + "\n"
                         + "EVALUATION LOCATION: " + this.get_location().getName() + "\n"
                         + "MODEL ALTERNATIVE: " + this.get_location().getModelToLinkTo());

@@ -213,10 +213,11 @@ public class IRMain extends AbstractSelfContainedPlugin<IRAlt> implements RtsPlu
         ModelAlternative ma = outputElement.getModelAlternative();
         ComputeOptions cco = ma.getComputeOptions();
         if (outputElement.getCommand() == "showReport") {
-            String filename = IRAlt.getReportFilename(cco,ma.getName());
+            String filename = IRReport.ReportBuilder.getReportFilename(cco,ma.getName());
             File file = new File(filename);
             if (file.exists()) {
-                String input = IRReport.readReport(filename);
+                String input = null;
+                input = IRReport.readReport(filename);
                 JTextArea textArea = new JTextArea(input);
                 JScrollPane scrollPane = new JScrollPane(textArea);
                 textArea.setLineWrap(true);
@@ -227,7 +228,7 @@ public class IRMain extends AbstractSelfContainedPlugin<IRAlt> implements RtsPlu
                  retval = true;
             } else {
                 JOptionPane.showMessageDialog(Browser.getBrowserFrame(), "Impact Response Report:\n" + filename + "\nDoes Not Exist", "Impact Response Report",
-                        JOptionPane.PLAIN_MESSAGE);
+                        JOptionPane.ERROR_MESSAGE);
                 retval =  false;
             }
         }
