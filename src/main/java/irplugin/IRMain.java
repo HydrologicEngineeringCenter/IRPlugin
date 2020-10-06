@@ -26,6 +26,7 @@ import javafx.embed.swing.JFXPanel;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import reports.IRReport;
 import rma.util.RMAFilenameFilter;
 import rma.util.RMAIO;
 import com.rma.io.FileManagerImpl;
@@ -60,7 +61,7 @@ public class IRMain extends AbstractSelfContainedPlugin<IRAlt> implements RtsPlu
         super();
         setName(PluginName);
         setProgramOrderItem(new ProgramOrderItem(PluginName,
-                "A plugin constructed from the tutorial",
+                "Impact Response Plugin",
                 false, 1, "IRP", "Images/riverware/png/WaterUser16.png"));
         RtsPluginManager.register(this);
     }
@@ -208,46 +209,30 @@ public class IRMain extends AbstractSelfContainedPlugin<IRAlt> implements RtsPlu
 
     @Override
     public boolean displayOutput(OutputElement outputElement, List<ModelAlternative> list) throws OutputException {
+        boolean retval = false;
         ModelAlternative ma = outputElement.getModelAlternative();
-        if (outputElement.getCommand()=="showReport"){
-            String rundir = ma.getComputeOptions().getRunDirectory();
-            String plugdir = rundir.concat(getPluginDirectory());
-            String filename = plugdir.concat(RmaFile.separator).concat("IRreport.rpt");
-            File file =  new File(filename);
-            String input = "";
-            BufferedReader reader = null;
-            try {
-                reader = new BufferedReader(new FileReader(file));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+        ComputeOptions cco = ma.getComputeOptions();
+        if (outputElement.getCommand() == "showReport") {
+            String filename = IRAlt.getReportFilename(cco,ma.getName());
+            File file = new File(filename);
+            if (file.exists()) {
+                String input = IRReport.readReport(filename);
+                JTextArea textArea = new JTextArea(input);
+                JScrollPane scrollPane = new JScrollPane(textArea);
+                textArea.setLineWrap(true);
+                textArea.setWrapStyleWord(true);
+                scrollPane.setPreferredSize(new Dimension(400, 400));
+                JOptionPane.showMessageDialog(Browser.getBrowserFrame(), scrollPane, "Impact Response Report",
+                        JOptionPane.PLAIN_MESSAGE);
+                 retval = true;
+            } else {
+                JOptionPane.showMessageDialog(Browser.getBrowserFrame(), "Impact Response Report:\n" + filename + "\nDoes Not Exist", "Impact Response Report",
+                        JOptionPane.PLAIN_MESSAGE);
+                retval =  false;
             }
-            String line = null;
-            while (true) {
-                try {
-                    if (!((line = reader.readLine()) != null)) break;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                input += line + "\n";
-            }
-            try {
-                reader.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            JTextArea textArea = new JTextArea(input);
-            JScrollPane scrollPane = new JScrollPane(textArea);
-            textArea.setLineWrap(true);
-            textArea.setWrapStyleWord(true);
-
-            scrollPane.setPreferredSize( new Dimension( 400, 400 )) ;
-            JOptionPane.showMessageDialog(Browser.getBrowserFrame(),  scrollPane, "Impact Response Report",
-                    JOptionPane.PLAIN_MESSAGE);
         }
-        return true;
-}
+        return retval;
+    }
 
     @Override
     public List<EditAction> getEditActions(ModelAlternative ma) {

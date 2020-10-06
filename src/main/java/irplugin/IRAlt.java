@@ -166,20 +166,17 @@ public boolean loadEvalLocs(Element ele, DataLocation dloc) {
             forecastDSSId.setStartTime(startTime);
             forecastDSSId.setEndTime(endTime);
             addComputeWarningMessage("----------------------------------------------------------------");
-            addComputeMessage("Computing Evalutaion Location Number "+ i + el.get_location().getName());
+            addComputeMessage("Computing Evalutaion Location Number "+ i +" "+ el.get_location().getName());
             addComputeMessage("Reading " + dsspathname + " from " + dssFilePath+ System.lineSeparator());
-
             CompResult results = el.compute(forecastDSSId);
-            String rundir = cco.getRunDirectory();
-            String plugdir = rundir.concat(RmaFile.separator).concat(IRMain.get_pluginSubDirectory());
-            String filename = plugdir.concat(RmaFile.separator).concat("IRreport.rpt");
+            String filename = getReportFilename(cco, getName());
             IRReport report = new IRReport.ReportBuilder()
                     .compMessages(results)
                     .errorMessages(results)
-                    .filepath(plugdir)
+                    .reportPath(filename)
                     .build();
-            for (String messages:results.getComputeMessages()) {
-                addComputeMessage(messages);
+            for (String cmessages:results.getComputeMessages()) {
+                addComputeMessage(cmessages);
             }
             for (String emessages:results.getErrorMessages()){
                 addComputeErrorMessage(emessages);
@@ -188,6 +185,14 @@ public boolean loadEvalLocs(Element ele, DataLocation dloc) {
         }
         return returnValue;
     }
+public static String getReportFilename(ComputeOptions cco, String altName){
+    String rundir = cco.getRunDirectory();
+    String plugdir = rundir.concat(RmaFile.separator).concat(IRMain.get_pluginSubDirectory());
+    String filename = plugdir.concat(RmaFile.separator).concat(altName).concat(".rpt");
+    return filename;
+
+
+}
 
     @Override
     public int getModelCount() {

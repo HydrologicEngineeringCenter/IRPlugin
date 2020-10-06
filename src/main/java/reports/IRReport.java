@@ -5,9 +5,7 @@ import irplugin.CompResult;
 import rma.util.RMAFile;
 import rma.util.RMAIO;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
+import java.io.*;
 import java.sql.Time;
 import java.util.List;
 
@@ -21,11 +19,8 @@ IRReport(){
 }
 private void writeReport(){
     try {
-        File file = new File(reportPath);
-        file.mkdirs();
-        String filename = reportPath.concat(RmaFile.separator).concat( "IRreport.rpt");
-        System.out.println("showReport: report file is " + filename);
-        _report = new BufferedWriter(new FileWriter(filename,false));
+        System.out.println("writeReport: report file is " + reportPath);
+        _report = new BufferedWriter(new FileWriter(reportPath,false));
         for (String messages: compMessages){
             _report.write(messages);
             _report.newLine();
@@ -39,6 +34,33 @@ private void writeReport(){
         {
             _report = null;
         }
+    }
+    public static String readReport(String filename){
+        File file =  new File(filename);
+
+        String input = "";
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader(file));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        String line = null;
+        while (true) {
+            try {
+                if (!((line = reader.readLine()) != null)) break;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            input += line + "\n";
+        }
+        try {
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return input;
     }
 public static class ReportBuilder{
     private List<String> errorMessages;
@@ -55,7 +77,7 @@ public static class ReportBuilder{
         return this;
     }
 
-    public ReportBuilder filepath (String path){
+    public ReportBuilder reportPath(String path){
         this.reportPath = path;
         return this;
     }
