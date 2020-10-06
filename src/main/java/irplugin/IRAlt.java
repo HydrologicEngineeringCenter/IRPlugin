@@ -1,6 +1,7 @@
 package irplugin;
 
 import com.rma.io.RmaFile;
+import hec.client.Report;
 import hec.heclib.util.HecTime;
 import hec.io.DSSIdentifier;
 import hec2.model.DataLocation;
@@ -9,6 +10,8 @@ import hec2.plugin.selfcontained.SelfContainedPluginAlt;
 import org.jdom.Document;
 import org.jdom.Element;
 import hec.heclib.dss.DSSPathname;
+import reports.IRReport;
+import rma.util.RMAIO;
 
 
 import java.util.ArrayList;
@@ -164,14 +167,19 @@ public boolean loadEvalLocs(Element ele, DataLocation dloc) {
             forecastDSSId.setStartTime(startTime);
             forecastDSSId.setEndTime(endTime);
             addComputeWarningMessage("----------------------------------------------------------------");
-            addComputeMessage("Computing Evalutaion Location Number "+ i + el.get_location().getName());
+            addComputeMessage("Computing Evalutaion Location Number "+ i +" "+ el.get_location().getName());
             addComputeMessage("Reading " + dsspathname + " from " + dssFilePath+ System.lineSeparator());
-
             CompResult results = el.compute(forecastDSSId);
-            for (String messages:results.computeMessages) {
-                addComputeMessage(messages);
+            String filename = IRReport.ReportBuilder.getReportFilename(cco, getName());
+            IRReport report = new IRReport.ReportBuilder()
+                    .compMessages(results)
+                    .errorMessages(results)
+                    .reportPath(filename)
+                    .build();
+            for (String cmessages:results.getComputeMessages()) {
+                addComputeMessage(cmessages);
             }
-            for (String emessages:results.errorMessages){
+            for (String emessages:results.getErrorMessages()){
                 addComputeErrorMessage(emessages);
 
             }

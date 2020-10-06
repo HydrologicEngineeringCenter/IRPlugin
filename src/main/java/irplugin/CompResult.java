@@ -7,9 +7,16 @@ import java.util.List;
 //to keep track of during a compute.
 public class CompResult {
     public boolean successfulCompute = false;
-    public List<String> computeMessages = new ArrayList<>();
-    public List<String> errorMessages = new ArrayList<>();
+    private List<String> computeMessages = new ArrayList<>();
+    private List<String> errorMessages = new ArrayList<>();
 
+    public List<String> getComputeMessages() {
+        return computeMessages;
+    }
+
+    public List<String> getErrorMessages() {
+        return errorMessages;
+    }
 
     private CompResult(){}
 

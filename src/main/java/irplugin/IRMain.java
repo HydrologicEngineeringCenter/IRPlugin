@@ -1,6 +1,7 @@
 package irplugin;
 
 import alteditor.Controller;
+import com.rma.client.Browser;
 import com.rma.factories.NewObjectFactory;
 import com.rma.io.RmaFile;
 import hec2.map.GraphicElement;
@@ -14,15 +15,18 @@ import hec2.plugin.lang.OutputException;
 import hec2.plugin.model.ComputeOptions;
 import hec2.plugin.model.ModelAlternative;
 import hec2.plugin.selfcontained.AbstractSelfContainedPlugin;
+import hec2.rts.client.RmiTextFileReaderJDialog;
 import hec2.rts.plugin.RtsPlugin;
 import hec2.rts.plugin.RtsPluginManager;
 import hec2.rts.plugin.action.ComputeModelAction;
+import hec2.rts.plugin.action.OutputElementImpl;
 import hec2.rts.ui.RtsTabType;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import reports.IRReport;
 import rma.util.RMAFilenameFilter;
 import rma.util.RMAIO;
 import com.rma.io.FileManagerImpl;
@@ -30,6 +34,7 @@ import com.rma.io.FileManagerImpl;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +48,10 @@ public class IRMain extends AbstractSelfContainedPlugin<IRAlt> implements RtsPlu
     //    the extension for plugin files (like the alternative)
     private static final String _pluginExtension = ".irp";
 
+    public static String get_pluginSubDirectory() {
+        return _pluginSubDirectory;
+    }
+
     public static void main(String[] args) {
 
         IRMain p = new IRMain();
@@ -52,7 +61,7 @@ public class IRMain extends AbstractSelfContainedPlugin<IRAlt> implements RtsPlu
         super();
         setName(PluginName);
         setProgramOrderItem(new ProgramOrderItem(PluginName,
-                "A plugin constructed from the tutorial",
+                "Impact Response Plugin",
                 false, 1, "IRP", "Images/riverware/png/WaterUser16.png"));
         RtsPluginManager.register(this);
     }
@@ -185,7 +194,12 @@ public class IRMain extends AbstractSelfContainedPlugin<IRAlt> implements RtsPlu
 
     @Override
     public List<OutputElement> getOutputReports(ModelAlternative ma) {
-        return null;
+        List<OutputElement> actions = new ArrayList<OutputElement>();
+        String actCmd = "showReport";
+        OutputElementImpl out = new OutputElementImpl("Report", PluginName, actCmd);
+        actions.add(out);
+
+        return actions;
     }
 
     @Override
@@ -195,7 +209,30 @@ public class IRMain extends AbstractSelfContainedPlugin<IRAlt> implements RtsPlu
 
     @Override
     public boolean displayOutput(OutputElement outputElement, List<ModelAlternative> list) throws OutputException {
-        return false;
+        boolean retval = false;
+        ModelAlternative ma = outputElement.getModelAlternative();
+        ComputeOptions cco = ma.getComputeOptions();
+        if (outputElement.getCommand() == "showReport") {
+            String filename = IRReport.ReportBuilder.getReportFilename(cco,ma.getName());
+            File file = new File(filename);
+            if (file.exists()) {
+                String input = null;
+                input = IRReport.readReport(filename);
+                JTextArea textArea = new JTextArea(input);
+                JScrollPane scrollPane = new JScrollPane(textArea);
+                textArea.setLineWrap(true);
+                textArea.setWrapStyleWord(true);
+                scrollPane.setPreferredSize(new Dimension(400, 400));
+                JOptionPane.showMessageDialog(Browser.getBrowserFrame(), scrollPane, "Impact Response Report",
+                        JOptionPane.PLAIN_MESSAGE);
+                 retval = true;
+            } else {
+                JOptionPane.showMessageDialog(Browser.getBrowserFrame(), "Impact Response Report:\n" + filename + "\nDoes Not Exist", "Impact Response Report",
+                        JOptionPane.ERROR_MESSAGE);
+                retval =  false;
+            }
+        }
+        return retval;
     }
 
     @Override
@@ -289,4 +326,5 @@ public class IRMain extends AbstractSelfContainedPlugin<IRAlt> implements RtsPlu
         return simAlt;
 
     }
+
 }

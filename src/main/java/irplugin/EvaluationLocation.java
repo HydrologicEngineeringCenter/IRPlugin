@@ -93,7 +93,7 @@ public class EvaluationLocation {
             if (act.compareToIgnoreCase("ShowMessage") == 0) {
                 compMessages.add("---------  Threshold value was exceeded--------- \n"
                         + "THRESHOLD VALUE: " + _evalValue + "\n"
-                        + "TIME OF EXCEEDANCE:" + firstpair.getKey() + "\n"
+                        + "TIME OF EXCEEDANCE: " + firstpair.getKey() + "\n"
                         + "ACTION MESSAGE: " + get_actionMessage() + "\n"
                         + "EVALUATION LOCATION: " + this.get_location().getName() + "\n"
                         + "MODEL ALTERNATIVE: " + this.get_location().getModelToLinkTo());
@@ -104,7 +104,6 @@ public class EvaluationLocation {
                         + "ACTION MESSAGE: " + get_actionMessage() + "\n"
                         + "EVALUATION LOCATION: " + this.get_location().getName() + "\n"
                         + "MODEL ALTERNATIVE: " + this.get_location().getModelToLinkTo() + "\n");
-//                label.setHorizontalAlignment(SwingConstants.CENTER);
                 JOptionPane.showMessageDialog(Browser.getBrowserFrame(), label, "IR Message", JOptionPane.INFORMATION_MESSAGE);
             } else {
                 errorMessages.add("'" + act + "'" + " is not a valid action");
