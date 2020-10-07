@@ -167,7 +167,6 @@ Controller implements Initializable {
 
     public void newLocation() {
         _locations.add(new EditorEvalLocs("SetThisValue", 0, "GreaterThan", "ShowMessage,ShowDialog", "SetThisValue"));
-
     }
 
     public void close() {

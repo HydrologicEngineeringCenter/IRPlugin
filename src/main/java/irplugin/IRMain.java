@@ -68,8 +68,6 @@ public class IRMain extends AbstractSelfContainedPlugin<IRAlt> implements RtsPlu
 
     @Override
     public void editAlternative(IRAlt irAlt) {
-//        UIMain.main(new String[]{});is to run UI main as is
-
 //        Sees if an existing editor window is present and repaints it.
         Window[] windows = Window.getWindows();
         for (Window window : windows){
@@ -91,7 +89,9 @@ public class IRMain extends AbstractSelfContainedPlugin<IRAlt> implements RtsPlu
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample.fxml"));
                 Parent root = loader.load();
-                jfxPanel.setScene(new Scene(root, 950, 400));
+                Scene scene = new Scene(root, 950, 400);
+                scene.getStylesheets().add("/stylesheet.css");
+                jfxPanel.setScene(scene);
                 // Give the controller access to the main app
                 Controller controller = loader.getController();
                 controller.set_irAlt(irAlt);
