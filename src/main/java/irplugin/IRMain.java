@@ -271,19 +271,20 @@ public class IRMain extends AbstractSelfContainedPlugin<IRAlt> implements RtsPlu
 
     @Override
     public boolean copyModelFiles(ModelAlternative ma, String s, boolean b) {
-        String source = RMAIO.concatPath(s, _pluginSubDirectory);
-        String dest;
-        RMAFilenameFilter filt = new RMAFilenameFilter("bak");
+        String srcDir = RMAIO.concatPath(s, _pluginSubDirectory);
+        RmaFile srcFile = new RmaFile(RMAIO.concatPath(srcDir,ma.getName()+_pluginExtension));
+        String destDir;
+        RmaFile destFile;
         if (b) {
 //            for forecast creation and replace from base
-            dest = RMAIO.concatPath(ma.getRunDirectory(), getPluginDirectory());
-            FileManagerImpl.getFileManager().copyDirectory(source, dest, filt, null);
-            return true;
+            destDir = RMAIO.concatPath(ma.getRunDirectory(), getPluginDirectory());
+
         } else {
 //            for copy to base
-            dest = getDirectory();
+            destDir = getDirectory();
         }
-        FileManagerImpl.getFileManager().copyDirectory(source, dest, filt, null);
+        destFile = new RmaFile(RMAIO.concatPath(destDir,ma.getName()+_pluginExtension));
+        FileManagerImpl.getFileManager().copyFile(srcFile, destFile);
         return true;
     }
 
