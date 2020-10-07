@@ -12,9 +12,11 @@ public class UIMainTester extends Application {
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("/sample.fxml"));
         Scene scene = new Scene(root, 950, 400);
+        scene.getStylesheets().add("/stylesheet.css");
         primaryStage.setScene(scene);
         primaryStage.setTitle("IRP Alternative Editor");
         primaryStage.show();
+
     }
 
 

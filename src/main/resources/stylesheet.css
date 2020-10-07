@@ -1,0 +1,76 @@
+#altLabel{
+     -fx-font-family:"Courier New";
+      -fx-font-size: 20px;
+      -fx-font-weight: bold;
+      -fx-text-fill: white;
+      -fx-background-color: linear-gradient(#131313 0%, #424141 100%);
+}
+.root{
+    -fx-background-color: #616161;
+    -fx-font-weight: bold;
+}
+
+.menu-bar{
+    -fx-background-color: linear-gradient(#131313 0%, #424141 100%);
+}
+
+.context-menu{
+    -fx-background-color:  linear-gradient(rgba(255, 0, 0, 1) 0%,
+                                                                              rgba(255, 154, 0, 1) 10%,
+                                                                              rgba(208, 222, 33, 1) 20%,
+                                                                              rgba(79, 220, 74, 1) 30%,
+                                                                              rgba(63, 218, 216, 1) 40%,
+                                                                              rgba(47, 201, 226, 1) 50%,
+                                                                              rgba(28, 127, 238, 1) 60%,
+                                                                              rgba(95, 21, 242, 1) 70%,
+                                                                              rgba(186, 12, 248, 1) 80%,
+                                                                              rgba(251, 7, 217, 1) 90%,
+                                                                              rgba(255, 0, 0, 1) 100%);
+}
+
+.menu .label {
+    -fx-text-fill: white;
+}
+.table-view{
+   -fx-background-color: transparent;
+}
+
+.table-view:focused{
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header-background{
+    -fx-background-color: linear-gradient(#131313 0%, #424141 100%);
+}
+
+.table-view .column-header-background .label{
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: white;
+}
+
+.table-view .table-cell{
+    -fx-text-fill: white;
+}
+
+.table-row-cell{
+    -fx-background-color: -fx-table-cell-border-color, #616161;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0.0em; /* 0 */
+}
+
+.table-row-cell:odd{
+    -fx-background-color: -fx-table-cell-border-color, #424242;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0.0em; /* 0 */
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #005797;
+    -fx-background-insets: 0;
+    -fx-background-radius: 1;
+}

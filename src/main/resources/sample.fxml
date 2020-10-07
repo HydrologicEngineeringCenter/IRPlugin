@@ -8,13 +8,13 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="758.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="alteditor.Controller">
    <children>
-      <MenuBar style="-fx-background-color: #d9d9d9;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <MenuBar AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
                   <MenuItem mnemonicParsing="false" onAction="#newLocation" text="New Location" />
                   <MenuItem mnemonicParsing="false" onAction="#saveLocations" text="Save" />
-              <MenuItem mnemonicParsing="false" onAction="#close" text="Close" />
+                <MenuItem mnemonicParsing="false" onAction="#close" text="Close" />
             </items>
           </Menu>
         </menus>
@@ -27,9 +27,6 @@
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="28.0" prefWidth="757.0" style="-fx-background-color: #ffffff;">
                <children>
                   <Label fx:id="altLabel" alignment="BOTTOM_CENTER" contentDisplay="CENTER" layoutX="66.0" layoutY="20.0" prefHeight="32.0" prefWidth="756.8" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <font>
-                        <Font name="System Italic" size="18.0" />
-                     </font>
                   </Label>
                </children></AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
