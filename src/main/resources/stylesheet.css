@@ -31,6 +31,10 @@
 .menu .label {
     -fx-text-fill: white;
 }
+
+.menu-item . label{
+    -fx-text-fill: black;
+}
 .table-view{
    -fx-background-color: transparent;
 }
