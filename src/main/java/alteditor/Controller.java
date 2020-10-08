@@ -43,7 +43,8 @@ Controller implements Initializable {
     @FXML
     private TableColumn<EditorEvalLocs, String> messageColumn;
 
-    private ObservableList<EditorEvalLocs> _locations;
+    private ObservableList<EditorEvalLocs> _editEvalLocations;
+
 
     private IRAlt _irAlt;
 
@@ -65,13 +66,13 @@ Controller implements Initializable {
                 String message = loc.get_actionMessage();
                 locations.add(new EditorEvalLocs(name, val, operator, action, message));
             }
-            this._locations = locations;
+            this._editEvalLocations = locations;
         } else {
-            this._locations = locations;
+            this._editEvalLocations = locations;
             newLocation();
         }
         altLabel.setText(_irAlt.getName());
-        tableView.setItems(_locations);
+        tableView.setItems(_editEvalLocations);
     }
 
 
@@ -166,7 +167,7 @@ Controller implements Initializable {
     }
 
     public void newLocation() {
-        _locations.add(new EditorEvalLocs("SetThisValue", 0, "GreaterThan", "ShowMessage,ShowDialog", "SetThisValue"));
+        _editEvalLocations.add(new EditorEvalLocs("SetThisValue", 0, "GreaterThan", "ShowMessage,ShowDialog", "SetThisValue"));
     }
 
     public void close() {
@@ -177,35 +178,32 @@ Controller implements Initializable {
     public void saveLocations() {
         ArrayList<EvaluationLocation> newEvalLocs = new ArrayList<>();
         ArrayList<DataLocation> newDls = new ArrayList<>();
-//        Creating Evaluation Locations from EditorEvalLocs
-        for (EditorEvalLocs editorEvalLocs : _locations) {
+//      Creating Evaluation Locations from EditorEvalLocs
+        for (EditorEvalLocs editorEvalLocs : _editEvalLocations) {
             String name = editorEvalLocs.getName();
             Integer val = editorEvalLocs.getValue();
             String operator = editorEvalLocs.getOperator();
             String action = editorEvalLocs.getActions();
             String message = editorEvalLocs.getMessage();
-            DataLocation dloc = new DataLocation(_irAlt.getModelAlt(), name, "Any");
-            dloc.setComputeType(DataLocationComputeType.Computed);
-            newDls.add(dloc);
-            newEvalLocs.add(new EvaluationLocation(dloc, val, operator, action, message));
+//          Evaluation Location constructor need a datalocation, so we will make a new one for each eval location
+            DataLocation dLoc = new DataLocation(_irAlt.getModelAlt(), name, "Any");
+            dLoc.setComputeType(DataLocationComputeType.Computed);
+            newDls.add(dLoc);
+            newEvalLocs.add(new EvaluationLocation(dLoc, val, operator, action, message));
         }
-//        Setting evaluation Locations and Data Locations to the IRalt.
+//        Setting new evaluation Locations and Data Locations to the IRalt
         _irAlt.set_evalLocs(newEvalLocs);
         List<DataLocation> altDLocs = _irAlt.get_dataLocations();
-//        If there are existing data locations, check names and don't add duplicates.
+//      If there are existing data locations, check names and don't add duplicates.
         if (altDLocs.size() > 0) {
-            List<String> Dlnames = new ArrayList<>();
-            for (DataLocation altDl : altDLocs) {
-                Dlnames.add(altDl.getName());
-            }
-            for (EvaluationLocation e : newEvalLocs) {
-                for (String dlname : Dlnames) {
-                    if (!(e.get_location().getName().equals(dlname))) {
-                        altDLocs.add(e.get_location());
-                    }
-                }
+//          Loop through the data locations already in the alt and check to see if new data locations exist
+            for (EvaluationLocation e : newEvalLocs){
+               if (!altDLocs.stream().anyMatch(o -> o.getName().equals(e.get_location().getName()))){
+                   altDLocs.add(e.get_location());
+               }
             }
         }
+
 //        If there are no Data Locations yet, (new alt) add all the Data Locations. Use distinct to avoid duplication.
         else {
             List<DataLocation> distinctElements = newDls.stream()
