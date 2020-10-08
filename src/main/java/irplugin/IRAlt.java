@@ -166,7 +166,7 @@ public boolean loadEvalLocs(Element ele, DataLocation dloc) {
             DSSIdentifier forecastDSSId = new DSSIdentifier(dssFilePath, dsspathname);
             forecastDSSId.setStartTime(startTime);
             forecastDSSId.setEndTime(endTime);
-            addComputeWarningMessage("----------------------------------------------------------------");
+            addComputeWarningMessage("--------------------------------------------------------------------------");
             addComputeMessage("Computing Evalutaion Location Number "+ i +" "+ el.get_location().getName());
             addComputeMessage("Reading " + dsspathname + " from " + dssFilePath+ System.lineSeparator());
             CompResult results = el.compute(forecastDSSId);

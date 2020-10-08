@@ -74,6 +74,7 @@ public class EvaluationLocation {
         List<String> compMessages = new ArrayList<>();
         List<String> errorMessages = new ArrayList<>();
         Map<String,Double> reportTimeValue = new LinkedHashMap<>();
+        boolean thresholdMet = false;
         boolean compSuccess = true;
         ArrayList<String> actList = parseActionsString(this.get_actions());
 //        Need to place some checks on whether the data is there
@@ -81,6 +82,7 @@ public class EvaluationLocation {
         for (int i = 0; i < tsc.values.length; i++) {
             System.out.println(tsc.values[i]);
                 if (tsc.values[i] > _evalValue) {
+                    thresholdMet = true;
                     int times = tsc.times[i];
                     HecTime hectime = new HecTime();
                     hectime.set(times);
@@ -88,26 +90,28 @@ public class EvaluationLocation {
                     reportTimeValue.put(humantime, tsc.values[i]);
                 }
         }
-        Map.Entry<String,Double> firstpair =  reportTimeValue.entrySet().iterator().next();
-        for (String act : actList) {
-            if (act.compareToIgnoreCase("ShowMessage") == 0) {
-                compMessages.add("---------  Threshold value was exceeded--------- \n"
-                        + "THRESHOLD VALUE: " + _evalValue + "\n"
-                        + "TIME OF EXCEEDANCE: " + firstpair.getKey() + "\n"
-                        + "ACTION MESSAGE: " + get_actionMessage() + "\n"
-                        + "EVALUATION LOCATION: " + this.get_location().getName() + "\n"
-                        + "MODEL ALTERNATIVE: " + this.get_location().getModelToLinkTo());
-            } else if (act.compareToIgnoreCase("ShowDialog") == 0) {
-                String label =("--------- Threshold value was exceeded---------- \n"
-                        + "THRESHOLD VALUE: " + _evalValue + "\n"
-                        + "TIME OF EXCEEDANCE:" + firstpair.getKey() + "\n"
-                        + "ACTION MESSAGE: " + get_actionMessage() + "\n"
-                        + "EVALUATION LOCATION: " + this.get_location().getName() + "\n"
-                        + "MODEL ALTERNATIVE: " + this.get_location().getModelToLinkTo() + "\n");
-                JOptionPane.showMessageDialog(Browser.getBrowserFrame(), label, "IR Message", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                errorMessages.add("'" + act + "'" + " is not a valid action");
-                compSuccess = false;
+        if (thresholdMet) {
+            Map.Entry<String, Double> firstpair = reportTimeValue.entrySet().iterator().next();
+            for (String act : actList) {
+                if (act.compareToIgnoreCase("ShowMessage") == 0) {
+                    errorMessages.add("---------  THRESHOLD WAS EXCEEDED--------- \n"
+                            + "THRESHOLD VALUE: " + _evalValue + "\n"
+                            + "TIME OF EXCEEDANCE: " + firstpair.getKey() + "\n"
+                            + "ACTION MESSAGE: " + get_actionMessage() + "\n"
+                            + "EVALUATION LOCATION: " + this.get_location().getName() + "\n"
+                            + "MODEL ALTERNATIVE: " + this.get_location().getModelToLinkTo());
+                } else if (act.compareToIgnoreCase("ShowDialog") == 0) {
+                    String label = ("--------- THRESHOLD WAS EXCEEDED---------- \n"
+                            + "THRESHOLD VALUE: " + _evalValue + "\n"
+                            + "TIME OF EXCEEDANCE:" + firstpair.getKey() + "\n"
+                            + "ACTION MESSAGE: " + get_actionMessage() + "\n"
+                            + "EVALUATION LOCATION: " + this.get_location().getName() + "\n"
+                            + "MODEL ALTERNATIVE: " + this.get_location().getModelToLinkTo() + "\n");
+                    JOptionPane.showMessageDialog(Browser.getBrowserFrame(), label, "IR Message", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    errorMessages.add("'" + act + "'" + " is not a valid action");
+                    compSuccess = false;
+                }
             }
         }
 
