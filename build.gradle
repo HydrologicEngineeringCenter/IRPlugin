@@ -25,7 +25,7 @@ dependencies {
     implementation 'mil.army.usace.hec:hecMaps-v1.1:3.2.1.459b@jar'
     implementation 'mil.army.usace.hec:hecnf:3.2.1.459b@jar'
     implementation 'mil.army.usace.hec:rtsPluginAPI:3.2.1.459b@jar'
-    implementation 'mil.army.usace.hec:hec:3.2.1.459b@jar'
+    implementation 'mil.army.usace.hec:hec:6.0.0.51@jar'
     implementation 'jdom:jdom:1.0@jar'
     implementation 'mil.army.usace.hec:rts:3.2.1.459b@jar'
 }
